@@ -11,8 +11,11 @@ struct DayCardView: View {
                 Label(compact ? entry.date.shortDay : entry.date.dayTitle, systemImage: "sun.max.fill")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(DayPalette.accent)
+                    .symbolRenderingMode(.hierarchical)
                 Spacer(minLength: 4)
-                Text(entry.mood.emoji).font(compact ? .body : .title3)
+                Text(entry.mood.emoji)
+                    .font(compact ? .body : .title3)
+                    .accessibilityLabel("心情：\(entry.mood.label)")
             }
             Text(entry.title)
                 .font(compact ? .subheadline.weight(.bold) : .headline)
@@ -31,8 +34,9 @@ struct DayCardView: View {
         }
         .padding(compact ? 12 : 16)
         .frame(maxWidth: .infinity, maxHeight: compact ? .infinity : nil, alignment: .topLeading)
-        .background(DayPalette.cardGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(DayPalette.accent.opacity(0.18)))
-        .shadow(color: DayPalette.accent.opacity(0.18), radius: 10, y: 4)
+        .journalCard(.day)
+        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityHint("查看白天日记")
     }
 }

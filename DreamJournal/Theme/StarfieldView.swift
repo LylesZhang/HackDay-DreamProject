@@ -9,9 +9,11 @@ struct StarfieldView: View {
     }
 
     @State private var stars: [Star] = []
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30)) { context in
+        // 开启“减弱动态效果”时暂停闪烁，也顺便省电
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
             Canvas { ctx, size in
                 for s in stars {
@@ -22,6 +24,7 @@ struct StarfieldView: View {
             }
         }
         .allowsHitTesting(false)
+        .accessibilityHidden(true)
         .onAppear {
             guard stars.isEmpty else { return }
             var rng = SystemRandomNumberGenerator()

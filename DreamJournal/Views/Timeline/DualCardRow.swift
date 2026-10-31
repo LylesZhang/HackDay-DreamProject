@@ -5,6 +5,7 @@ struct DualCardRow: View {
     let pair: DayNightPair
     var onAddDay: () -> Void
     var onAddDream: () -> Void
+    @ScaledMetric(relativeTo: .body) private var cardHeight: CGFloat = 170
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -14,6 +15,7 @@ struct DualCardRow: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(.black.opacity(0.18), in: Capsule())
+                .accessibilityAddTraits(.isHeader)
 
             HStack(alignment: .top, spacing: 10) {
                 Group {
@@ -31,8 +33,9 @@ struct DualCardRow: View {
                     }
                 }
             }
-            .buttonStyle(.plain)
-            .frame(height: 170)
+            .buttonStyle(PressableCardStyle())
+            // 高度随动态字体等比放大，大字号下内容不被截断
+            .frame(height: cardHeight)
         }
     }
 }
@@ -44,19 +47,26 @@ struct PlaceholderCard: View {
         VStack(spacing: 8) {
             Image(systemName: isNight ? "moon.zzz" : "sun.haze")
                 .font(.title2)
-            Text(isNight ? "+ 记录今晚的梦" : "+ 记录这一天")
+                .symbolRenderingMode(.hierarchical)
+            Text(isNight ? "记录今晚的梦" : "记录这一天")
                 .font(.caption.weight(.semibold))
+            Image(systemName: "plus.circle.fill")
+                .font(.callout)
         }
         .foregroundStyle(isNight ? NightPalette.accent : DayPalette.accent)
+        .padding(12)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(isNight ? Color(hex: 0x1A1640, opacity: 0.55) : Color.white.opacity(0.55))
+                .fill(isNight ? NightPalette.ink.opacity(0.55) : Color(hex: 0x261C15, opacity: 0.6))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [6, 5]))
                 .foregroundStyle(isNight ? NightPalette.cardStroke : DayPalette.accent.opacity(0.5))
         )
+        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(isNight ? "记录这一晚的梦" : "记录这一天")
     }
 }

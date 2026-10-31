@@ -12,6 +12,7 @@
 		2C2526B914975D4F93F2857D /* DayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91552502FF37E70731AF7F /* DayCardView.swift */; };
 		2C704166C00E569E89C77677 /* DayEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D6005ADA277D79EB27DAB7 /* DayEntry.swift */; };
 		35C642415803D8E8AACAAC40 /* DreamCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40945C15DAD6A643595B0E6A /* DreamCardView.swift */; };
+		A1D0E5F1C0FFEE0000000001 /* DreamNotesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E5F1C0FFEE0000000002 /* DreamNotesList.swift */; };
 		377A28ECB2987E09D30D1835 /* DreamEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BBB8A7B5DECA35D1BE76EF /* DreamEntry.swift */; };
 		3988DFC99874B0F31A9AC795 /* DreamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075509FD55EDA3A9DA265223 /* DreamDetailView.swift */; };
 		3DB18ED1955E7368635A9047 /* AnalysisReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30748061657350A9106E5AAF /* AnalysisReportView.swift */; };
@@ -43,6 +44,7 @@
 		29F750DF431E80EE7DE73A06 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		30748061657350A9106E5AAF /* AnalysisReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisReportView.swift; sourceTree = "<group>"; };
 		40945C15DAD6A643595B0E6A /* DreamCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamCardView.swift; sourceTree = "<group>"; };
+		A1D0E5F1C0FFEE0000000002 /* DreamNotesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamNotesList.swift; sourceTree = "<group>"; };
 		4F91552502FF37E70731AF7F /* DayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCardView.swift; sourceTree = "<group>"; };
 		50D6005ADA277D79EB27DAB7 /* DayEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEntry.swift; sourceTree = "<group>"; };
 		51D5314F8BF970BA9A922B3F /* DreamAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamAnalysis.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				4F91552502FF37E70731AF7F /* DayCardView.swift */,
 				FA66B468580EE33BF4F27C4B /* DayDetailView.swift */,
 				40945C15DAD6A643595B0E6A /* DreamCardView.swift */,
+				A1D0E5F1C0FFEE0000000002 /* DreamNotesList.swift */,
 				E74169DE36B9130CBA9DB49B /* DualCardRow.swift */,
 				0D02031F1F52947BCDC2B1A8 /* ModeToggle.swift */,
 				C520287FF9C68C1685B4AA2E /* TimelineScreen.swift */,
@@ -354,6 +357,7 @@
 				2C704166C00E569E89C77677 /* DayEntry.swift in Sources */,
 				846BDB44574BC21CDEF70311 /* DreamAnalysis.swift in Sources */,
 				35C642415803D8E8AACAAC40 /* DreamCardView.swift in Sources */,
+				A1D0E5F1C0FFEE0000000001 /* DreamNotesList.swift in Sources */,
 				1B8285125118D31B92FFF3A4 /* DreamComposeView.swift in Sources */,
 				3988DFC99874B0F31A9AC795 /* DreamDetailView.swift in Sources */,
 				377A28ECB2987E09D30D1835 /* DreamEntry.swift in Sources */,

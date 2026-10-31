@@ -15,7 +15,9 @@ struct ModeToggle: View {
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: m.icon)
+                            .symbolEffect(.bounce, value: mode == m)
                         Text(m.label)
+                            .lineLimit(1)
                     }
                     .font(.subheadline.weight(.semibold))
                     .padding(.horizontal, 14)
@@ -31,15 +33,19 @@ struct ModeToggle: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityAddTraits(mode == m ? .isSelected : [])
             }
         }
         .padding(4)
         .background(.ultraThinMaterial, in: Capsule())
-        .environment(\.colorScheme, isNight ? .dark : .light)
+        .environment(\.colorScheme, .dark)
+        .sensoryFeedback(.selection, trigger: mode)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("时间轴模式")
     }
 
     private func foreground(for m: TimelineMode) -> Color {
-        if mode == m { return m == .day ? DayPalette.text : .white }
+        if mode == m { return m == .day ? DayPalette.ink : .white }
         return isNight ? NightPalette.secondaryText : DayPalette.secondaryText
     }
 
@@ -48,9 +54,9 @@ struct ModeToggle: View {
         case .day:
             AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xFFE2B8), DayPalette.accent], startPoint: .topLeading, endPoint: .bottomTrailing))
         case .night:
-            AnyShapeStyle(LinearGradient(colors: [Color(hex: 0x5B3FA8), Color(hex: 0x1F2A6B)], startPoint: .topLeading, endPoint: .bottomTrailing))
+            AnyShapeStyle(LinearGradient(colors: [NightPalette.glow, Color(hex: 0x1F2A6B)], startPoint: .topLeading, endPoint: .bottomTrailing))
         case .dual:
-            AnyShapeStyle(LinearGradient(colors: [DayPalette.accent, Color(hex: 0x5B3FA8)], startPoint: .leading, endPoint: .trailing))
+            AnyShapeStyle(LinearGradient(colors: [DayPalette.accent, NightPalette.glow], startPoint: .leading, endPoint: .trailing))
         }
     }
 }

@@ -6,6 +6,7 @@ struct DayDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let entryID: UUID
     @State private var editing = false
+    @State private var confirmDelete = false
 
     var body: some View {
         ZStack {
@@ -30,35 +31,42 @@ struct DayDetailView: View {
                             .lineSpacing(6)
                             .foregroundStyle(DayPalette.text)
                         if !entry.tags.isEmpty {
-                            HStack { ForEach(entry.tags, id: \.self) { TagChip(text: $0, isNight: false) } }
+                            FlowLayout { ForEach(entry.tags, id: \.self) { TagChip(text: $0, isNight: false) } }
                         }
                         if let dream = sameNightDream(for: entry) {
-                            Text("当晚的梦").font(.headline).foregroundStyle(DayPalette.text).padding(.top, 12)
+                            Label("当晚的梦", systemImage: "moon.stars.fill")
+                                .font(.headline)
+                                .foregroundStyle(DayPalette.text)
+                                .padding(.top, 12)
+                                .accessibilityAddTraits(.isHeader)
                             NavigationLink(value: Route.dream(dream.id)) { DreamCardView(entry: dream) }
-                                .buttonStyle(.plain)
+                                .buttonStyle(PressableCardStyle())
                         }
                     }
                     .padding(20)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(DayPalette.cardGradient, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .journalCard(.day, radius: 24)
                     .padding(16)
                 }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
                             Button("编辑", systemImage: "pencil") { editing = true }
-                            Button("删除", systemImage: "trash", role: .destructive) {
-                                dismiss()
-                                store.deleteDay(id: entryID)
-                            }
-                        } label: { Image(systemName: "ellipsis.circle") }
+                            Button("删除", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                        } label: { Label("更多", systemImage: "ellipsis.circle") }
                     }
                 }
                 .sheet(isPresented: $editing) { DayComposeView(existing: entry) }
+                .confirmationDialog("删除这篇日记？", isPresented: $confirmDelete, titleVisibility: .visible) {
+                    Button("删除", role: .destructive) {
+                        dismiss()
+                        store.deleteDay(id: entryID)
+                    }
+                } message: { Text("删除后无法恢复") }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .tint(DayPalette.accent)
     }
 

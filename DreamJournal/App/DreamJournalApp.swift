@@ -8,6 +8,7 @@ struct DreamJournalApp: App {
         WindowGroup {
             TimelineScreen()
                 .environment(store)
+                .preferredColorScheme(.dark)
         }
     }
 }

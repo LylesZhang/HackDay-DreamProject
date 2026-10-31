@@ -9,6 +9,7 @@ struct TimelineScreen: View {
     @State private var showQuickCapture = false
     @State private var showChooser = false
     @State private var showSettings = false
+    @State private var addTaps = 0
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -80,6 +81,7 @@ struct TimelineScreen: View {
                     Text(greeting)
                         .font(.subheadline)
                         .foregroundStyle(titleColor.opacity(0.7))
+                        .contentTransition(.opacity)
                     Text("昼夜日记")
                         .font(.largeTitle.weight(.bold))
                         .foregroundStyle(titleColor)
@@ -89,9 +91,10 @@ struct TimelineScreen: View {
                     Image(systemName: "gearshape.fill")
                         .font(.title3)
                         .foregroundStyle(titleColor.opacity(0.8))
-                        .padding(10)
+                        .frame(width: 44, height: 44)
                         .background(.ultraThinMaterial, in: Circle())
                 }
+                .accessibilityLabel("设置")
             }
             ModeToggle(mode: $mode)
         }
@@ -113,20 +116,19 @@ struct TimelineScreen: View {
             LazyVStack(spacing: 14) {
                 ForEach(store.sortedDays) { entry in
                     NavigationLink(value: Route.day(entry.id)) { DayCardView(entry: entry) }
+                        .scrollTransition(.animated.threshold(.visible(0.2))) { view, phase in
+                            view.opacity(phase.isIdentity ? 1 : 0.6).scaleEffect(phase.isIdentity ? 1 : 0.96)
+                        }
                 }
-                if store.dayEntries.isEmpty { emptyHint("还没有白天日记，点右下角 + 开始记录") }
+                if store.dayEntries.isEmpty {
+                    emptyState("还没有白天日记", systemImage: "sun.haze", message: "点右下角 + 记下今天发生的事")
+                }
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PressableCardStyle())
             .transition(.move(edge: .leading).combined(with: .opacity))
         case .night:
-            LazyVStack(spacing: 14) {
-                ForEach(store.sortedDreams) { entry in
-                    NavigationLink(value: Route.dream(entry.id)) { DreamCardView(entry: entry) }
-                }
-                if store.dreamEntries.isEmpty { emptyHint("还没有梦境记录，醒来后第一时间记下来吧") }
-            }
-            .buttonStyle(.plain)
-            .transition(.move(edge: .trailing).combined(with: .opacity))
+            DreamNotesList()
+                .transition(.move(edge: .trailing).combined(with: .opacity))
         case .dual:
             LazyVStack(spacing: 18) {
                 ForEach(store.dayNightPairs) { pair in
@@ -134,20 +136,27 @@ struct TimelineScreen: View {
                                 onAddDay: { compose = .day(pair.date) },
                                 onAddDream: { compose = .dream(pair.date) })
                 }
+                if store.dayNightPairs.isEmpty {
+                    emptyState("白天与梦境都还空着", systemImage: "circle.lefthalf.filled", message: "点右下角 + 写下第一篇")
+                }
             }
             .transition(.opacity)
         }
     }
 
-    private func emptyHint(_ text: String) -> some View {
-        Text(text)
-            .font(.callout)
-            .foregroundStyle(titleColor.opacity(0.6))
-            .padding(.top, 60)
+    private func emptyState(_ title: String, systemImage: String, message: String) -> some View {
+        ContentUnavailableView {
+            Label(title, systemImage: systemImage)
+                .foregroundStyle(titleColor)
+        } description: {
+            Text(message).foregroundStyle(titleColor.opacity(0.7))
+        }
+        .padding(.top, 40)
     }
 
     private var addButton: some View {
         Button {
+            addTaps += 1
             switch mode {
             case .day: compose = .day(.now)
             case .night: compose = .dream(Calendar.current.date(byAdding: .day, value: -1, to: .now)!)
@@ -159,16 +168,28 @@ struct TimelineScreen: View {
                 .foregroundStyle(.white)
                 .frame(width: 60, height: 60)
                 .background(addGradient, in: Circle())
-                .shadow(color: .black.opacity(0.25), radius: 10, y: 5)
+                .overlay(Circle().strokeBorder(.white.opacity(0.35), lineWidth: 1))
+                .shadow(color: (mode == .day ? DayPalette.accent : NightPalette.glow).opacity(0.5), radius: 14, y: 6)
         }
+        .buttonStyle(PressableCardStyle())
+        .sensoryFeedback(.impact(weight: .medium), trigger: addTaps)
+        .accessibilityLabel(addLabel)
         .padding(24)
+    }
+
+    private var addLabel: String {
+        switch mode {
+        case .day: "新建白天日记"
+        case .night: "新建梦境日记"
+        case .dual: "新建日记"
+        }
     }
 
     private var addGradient: LinearGradient {
         switch mode {
         case .day: LinearGradient(colors: [Color(hex: 0xFFC48A), DayPalette.accent], startPoint: .top, endPoint: .bottom)
-        case .night: LinearGradient(colors: [Color(hex: 0x8A6BE0), Color(hex: 0x3B2A80)], startPoint: .top, endPoint: .bottom)
-        case .dual: LinearGradient(colors: [DayPalette.accent, Color(hex: 0x5B3FA8)], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .night: LinearGradient(colors: [NightPalette.lavender, Color(hex: 0x3B2A80)], startPoint: .top, endPoint: .bottom)
+        case .dual: LinearGradient(colors: [DayPalette.accent, NightPalette.glow], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
 

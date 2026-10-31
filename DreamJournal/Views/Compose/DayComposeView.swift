@@ -40,9 +40,13 @@ struct DayComposeView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 6)
                                 .background(draft.mood == mood ? DayPalette.chip : .clear,
-                                            in: RoundedRectangle(cornerRadius: 12))
+                                            in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                .scaleEffect(draft.mood == mood ? 1.06 : 1)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: draft.mood)
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(mood.label)
+                            .accessibilityAddTraits(draft.mood == mood ? .isSelected : [])
                         }
                     }
                 }
@@ -64,7 +68,8 @@ struct DayComposeView: View {
             }
         }
         .tint(DayPalette.accent)
-        .environment(\.colorScheme, .light)
+        .environment(\.colorScheme, .dark)
+        .sensoryFeedback(.selection, trigger: draft.mood)
     }
 
     private func save() {

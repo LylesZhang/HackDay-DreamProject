@@ -22,14 +22,7 @@ struct DreamCardView: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(NightPalette.accent)
                 Spacer(minLength: 4)
-                if entry.analysis != nil {
-                    Text(compact ? "✨" : "✨ 已分析")
-                        .font(.caption2.weight(.semibold))
-                        .padding(.horizontal, compact ? 0 : 8)
-                        .padding(.vertical, 3)
-                        .background(compact ? Color.clear : NightPalette.chip, in: Capsule())
-                        .foregroundStyle(NightPalette.text)
-                }
+                if entry.analysis != nil { analyzedBadge }
             }
             Text(entry.title)
                 .font(compact ? .subheadline.weight(.bold) : .headline)
@@ -43,7 +36,7 @@ struct DreamCardView: View {
                 HStack(spacing: 6) {
                     ForEach(entry.emotions.prefix(3), id: \.self) { TagChip(text: $0, isNight: true) }
                     if entry.isLucid { TagChip(text: "清醒梦", isNight: true) }
-                    Spacer()
+                    Spacer(minLength: 0)
                     VividnessStars(value: entry.vividness)
                 }
             } else {
@@ -53,9 +46,27 @@ struct DreamCardView: View {
         }
         .padding(compact ? 12 : 16)
         .frame(maxWidth: .infinity, maxHeight: compact ? .infinity : nil, alignment: .topLeading)
-        .background(NightPalette.cardGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(NightPalette.cardStroke))
-        .shadow(color: Color(hex: 0x5B3FA8).opacity(0.35), radius: 12, y: 4)
+        .journalCard(.night)
+        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityHint("查看梦境详情")
+    }
+
+    @ViewBuilder
+    private var analyzedBadge: some View {
+        if compact {
+            Image(systemName: "sparkles")
+                .font(.caption)
+                .foregroundStyle(NightPalette.accent)
+                .accessibilityLabel("已分析")
+        } else {
+            Label("已分析", systemImage: "sparkles")
+                .font(.caption2.weight(.semibold))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(NightPalette.chip, in: Capsule())
+                .foregroundStyle(NightPalette.text)
+        }
     }
 }
 
@@ -69,7 +80,10 @@ struct VividnessStars: View {
                 Image(systemName: i <= value ? "star.fill" : "star")
             }
         }
-        .font(.system(size: 9))
+        .font(.caption2)
+        .imageScale(.small)
         .foregroundStyle(NightPalette.accent)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("清晰度 \(value) 星，共 5 星")
     }
 }

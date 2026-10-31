@@ -10,6 +10,8 @@ struct QuickDreamCaptureView: View {
     @StateObject private var speechRecorder = SpeechRecorder()
     @State private var note = ""
     @State private var selectedKeywords: Set<String> = []
+    /// 开始录音时已有的文字；转写结果接在它后面，而不是覆盖用户手打的内容
+    @State private var noteBeforeRecording = ""
 
     private let keywordGroups = [
         ("地点", ["家", "学校", "陌生城市", "海边", "森林"]),
@@ -34,11 +36,18 @@ struct QuickDreamCaptureView: View {
                             .frame(minHeight: 130)
                             .padding(12)
                             .scrollContentBackground(.hidden)
-                            .background(NightPalette.cardGradient, in: RoundedRectangle(cornerRadius: 20))
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(NightPalette.cardStroke, lineWidth: 1)
+                            .overlay(alignment: .topLeading) {
+                                if note.isEmpty {
+                                    Text("或者直接写下来…")
+                                        .foregroundStyle(NightPalette.secondaryText.opacity(0.7))
+                                        .padding(.horizontal, 17)
+                                        .padding(.vertical, 20)
+                                        .allowsHitTesting(false)
+                                        .accessibilityHidden(true)
+                                }
                             }
+                            .journalCard(.night, shadow: false)
+                            .accessibilityLabel("梦境文字记录")
                     }
                     .padding(20)
                     .padding(.bottom, 30)
@@ -57,7 +66,7 @@ struct QuickDreamCaptureView: View {
             }
             .onChange(of: speechRecorder.transcript) { _, transcript in
                 guard !transcript.isEmpty else { return }
-                note = transcript
+                note = noteBeforeRecording.isEmpty ? transcript : noteBeforeRecording + " " + transcript
             }
             .onDisappear { speechRecorder.stopRecording() }
         }
@@ -82,14 +91,20 @@ struct QuickDreamCaptureView: View {
                 HStack(spacing: 10) {
                     Image(systemName: speechRecorder.isRecording ? "stop.fill" : "mic.fill")
                         .font(.title3)
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.pulse, isActive: speechRecorder.isRecording)
                     Text(speechRecorder.isRecording ? "结束语音输入" : "说一说这个梦")
                         .font(.headline)
                 }
-                .foregroundStyle(Color(hex: 0x1B1640))
+                .foregroundStyle(NightPalette.ink)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 17)
-                .background(NightPalette.accent, in: RoundedRectangle(cornerRadius: 18))
+                .background(NightPalette.accent, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .shadow(color: NightPalette.accent.opacity(speechRecorder.isRecording ? 0.7 : 0.3),
+                        radius: speechRecorder.isRecording ? 18 : 8)
             }
+            .buttonStyle(PressableCardStyle())
+            .sensoryFeedback(.impact(weight: .light), trigger: speechRecorder.isRecording)
 
             if let errorMessage = speechRecorder.errorMessage {
                 Text(errorMessage)
@@ -110,6 +125,7 @@ struct QuickDreamCaptureView: View {
                     Text(group.0)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(NightPalette.secondaryText)
+                        .accessibilityAddTraits(.isHeader)
                     FlowChips(options: group.1, selection: keywordBinding)
                 }
             }
@@ -127,6 +143,8 @@ struct QuickDreamCaptureView: View {
         if speechRecorder.isRecording {
             speechRecorder.stopRecording()
         } else {
+            noteBeforeRecording = note.trimmingCharacters(in: .whitespacesAndNewlines)
+            speechRecorder.transcript = ""
             speechRecorder.startRecording()
         }
     }

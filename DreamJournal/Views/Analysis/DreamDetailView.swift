@@ -10,6 +10,8 @@ struct DreamDetailView: View {
     @State private var isAnalyzing = false
     @State private var errorMessage: String?
     @State private var editing = false
+    @State private var confirmDelete = false
+    @State private var analysisDone = 0
 
     var body: some View {
         ZStack {
@@ -28,14 +30,17 @@ struct DreamDetailView: View {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
                             Button("编辑", systemImage: "pencil") { editing = true }
-                            Button("删除", systemImage: "trash", role: .destructive) {
-                                dismiss()
-                                store.deleteDream(id: dreamID)
-                            }
-                        } label: { Image(systemName: "ellipsis.circle") }
+                            Button("删除", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                        } label: { Label("更多", systemImage: "ellipsis.circle") }
                     }
                 }
                 .sheet(isPresented: $editing) { DreamComposeView(existing: dream) }
+                .confirmationDialog("删除这个梦？", isPresented: $confirmDelete, titleVisibility: .visible) {
+                    Button("删除", role: .destructive) {
+                        dismiss()
+                        store.deleteDream(id: dreamID)
+                    }
+                } message: { Text("它的 AI 分析报告也会一起删除，且无法恢复") }
                 .onAppear {
                     if DemoLaunch.autoAnalyze, dream.analysis == nil, !isAnalyzing { analyze(dream, using: AnalysisServiceFactory.current()) }
                 }
@@ -46,6 +51,8 @@ struct DreamDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .tint(NightPalette.accent)
+        .sensoryFeedback(.success, trigger: analysisDone)
+        .sensoryFeedback(.error, trigger: errorMessage) { _, new in new != nil }
         .alert("分析失败", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
             Button("改用 Mock 重试") {
                 if let dream = store.dream(id: dreamID) { analyze(dream, using: MockAnalysisService()) }
@@ -72,18 +79,17 @@ struct DreamDetailView: View {
                 .font(.body)
                 .lineSpacing(6)
                 .foregroundStyle(NightPalette.text.opacity(0.9))
-            HStack(spacing: 6) {
+            FlowLayout {
                 ForEach(dream.emotions, id: \.self) { TagChip(text: $0, isNight: true) }
                 if dream.isLucid { TagChip(text: "清醒梦", isNight: true) }
             }
             if !dream.tags.isEmpty {
-                HStack(spacing: 6) { ForEach(dream.tags, id: \.self) { TagChip(text: $0, isNight: true) } }
+                FlowLayout { ForEach(dream.tags, id: \.self) { TagChip(text: $0, isNight: true) } }
             }
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(NightPalette.cardGradient, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).stroke(NightPalette.cardStroke))
+        .journalCard(.night, radius: 24)
     }
 
     @ViewBuilder
@@ -94,10 +100,12 @@ struct DreamDetailView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(GlowButtonStyle())
-            Button("重新生成分析") { analyze(dream, using: AnalysisServiceFactory.current()) }
-                .font(.footnote)
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(NightPalette.secondaryText)
+            Button { analyze(dream, using: AnalysisServiceFactory.current()) } label: {
+                Label("重新生成分析", systemImage: "arrow.clockwise")
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            }
+            .foregroundStyle(NightPalette.secondaryText)
         } else {
             VStack(spacing: 8) {
                 Button { analyze(dream, using: AnalysisServiceFactory.current()) } label: {
@@ -107,6 +115,7 @@ struct DreamDetailView: View {
                 .buttonStyle(GlowButtonStyle())
                 Text("AI 会结合这个梦之前的白天日记和过往梦境一起分析")
                     .font(.caption)
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(NightPalette.secondaryText)
             }
         }
@@ -119,6 +128,7 @@ struct DreamDetailView: View {
                 let analysis = try await service.analyze(dream: dream, store: store)
                 store.attach(analysis, toDream: dream.id)
                 withAnimation { isAnalyzing = false }
+                analysisDone += 1
                 path.append(.report(dream.id))
             } catch {
                 withAnimation { isAnalyzing = false }
@@ -135,11 +145,13 @@ struct GlowButtonStyle: ButtonStyle {
             .foregroundStyle(.white)
             .padding(.vertical, 16)
             .background(
-                LinearGradient(colors: [Color(hex: 0x8A6BE0), Color(hex: 0x3B4BC8)], startPoint: .leading, endPoint: .trailing),
+                LinearGradient(colors: [NightPalette.lavender, NightPalette.indigo], startPoint: .leading, endPoint: .trailing),
                 in: RoundedRectangle(cornerRadius: 18, style: .continuous)
             )
-            .shadow(color: Color(hex: 0x8A6BE0).opacity(0.6), radius: configuration.isPressed ? 4 : 14)
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(.white.opacity(0.25), lineWidth: 1))
+            .shadow(color: NightPalette.lavender.opacity(0.6), radius: configuration.isPressed ? 4 : 14)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 
@@ -147,6 +159,7 @@ struct GlowButtonStyle: ButtonStyle {
 struct AnalyzingOverlay: View {
     @State private var spin = false
     @State private var step = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let messages = ["正在检索梦前几天的白天日记…", "正在寻找相似的过往梦境…", "正在连接你的白天与梦境…"]
     private let timer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
 
@@ -167,12 +180,15 @@ struct AnalyzingOverlay: View {
                         .foregroundStyle(NightPalette.text)
                 }
                 .rotationEffect(.degrees(spin ? 360 : 0))
-                .animation(.linear(duration: 4).repeatForever(autoreverses: false), value: spin)
+                .animation(reduceMotion ? nil : .linear(duration: 4).repeatForever(autoreverses: false), value: spin)
+                .accessibilityHidden(true)
                 Text(messages[step % messages.count])
                     .font(.callout.weight(.medium))
                     .foregroundStyle(NightPalette.text)
                     .contentTransition(.opacity)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.updatesFrequently)
         }
         .onAppear { spin = true }
         .onReceive(timer) { _ in withAnimation { step += 1 } }

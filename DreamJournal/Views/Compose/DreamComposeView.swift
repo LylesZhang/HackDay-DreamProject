@@ -39,9 +39,24 @@ struct DreamComposeView: View {
                             Text("清晰度")
                             Spacer()
                             ForEach(1...5, id: \.self) { i in
-                                Image(systemName: i <= draft.vividness ? "star.fill" : "star")
-                                    .foregroundStyle(NightPalette.accent)
-                                    .onTapGesture { draft.vividness = i }
+                                Button { draft.vividness = i } label: {
+                                    Image(systemName: i <= draft.vividness ? "star.fill" : "star")
+                                        .foregroundStyle(NightPalette.accent)
+                                        .symbolEffect(.bounce, value: draft.vividness == i)
+                                        .frame(width: 30, height: 36)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.borderless)
+                            }
+                        }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("清晰度")
+                        .accessibilityValue("\(draft.vividness) 星，共 5 星")
+                        .accessibilityAdjustableAction { direction in
+                            switch direction {
+                            case .increment: draft.vividness = min(5, draft.vividness + 1)
+                            case .decrement: draft.vividness = max(1, draft.vividness - 1)
+                            @unknown default: break
                             }
                         }
                         Toggle("这是一个清醒梦", isOn: $draft.isLucid)
@@ -64,6 +79,7 @@ struct DreamComposeView: View {
         }
         .tint(NightPalette.accent)
         .environment(\.colorScheme, .dark)
+        .sensoryFeedback(.selection, trigger: draft.vividness)
     }
 
     private func save() {
@@ -88,17 +104,25 @@ struct FlowChips: View {
         LazyVGrid(columns: columns, spacing: 8) {
             ForEach(options, id: \.self) { option in
                 let on = selection.contains(option)
-                Text(option)
-                    .font(.subheadline.weight(.medium))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-                    .background(on ? NightPalette.accent.opacity(0.85) : NightPalette.chip, in: Capsule())
-                    .foregroundStyle(on ? Color(hex: 0x1B1640) : NightPalette.text)
-                    .onTapGesture {
-                        if on { selection.removeAll { $0 == option } } else { selection.append(option) }
-                    }
+                Button {
+                    if on { selection.removeAll { $0 == option } } else { selection.append(option) }
+                } label: {
+                    Text(option)
+                        .font(.subheadline.weight(.medium))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity, minHeight: 32)
+                        .background(on ? NightPalette.accent.opacity(0.85) : NightPalette.chip, in: Capsule())
+                        .overlay(Capsule().strokeBorder(NightPalette.accent.opacity(on ? 0 : 0.3), lineWidth: 1))
+                        .foregroundStyle(on ? NightPalette.ink : NightPalette.text)
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(.borderless)
+                .accessibilityAddTraits(on ? .isSelected : [])
             }
         }
         .padding(.vertical, 4)
+        .animation(.snappy(duration: 0.2), value: selection)
+        .sensoryFeedback(.selection, trigger: selection)
     }
 }

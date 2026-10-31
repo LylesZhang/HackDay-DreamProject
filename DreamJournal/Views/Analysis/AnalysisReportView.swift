@@ -57,7 +57,7 @@ struct AnalysisReportView: View {
                         section("情绪基调", icon: "waveform.path.ecg") {
                             Text(report.emotionalTone).lineSpacing(5)
                         }
-                        section("给你的小建议", icon: "leaf.fill", tint: Color(hex: 0x8FE3B0)) {
+                        section("给你的小建议", icon: "leaf.fill", tint: NightPalette.leaf) {
                             Text(report.suggestion).lineSpacing(5)
                         }
                         footer(report)
@@ -74,19 +74,20 @@ struct AnalysisReportView: View {
 
     private func header(_ dream: DreamEntry, _ report: DreamAnalysis) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("✨ \(dream.title)")
+            Label(dream.title, systemImage: "sparkles")
                 .font(.title2.weight(.bold))
+                .symbolRenderingMode(.hierarchical)
             Text(dream.dreamDate.dayTitle + " 的梦")
                 .font(.subheadline)
                 .foregroundStyle(NightPalette.secondaryText)
-            HStack(spacing: 8) {
+            FlowLayout(spacing: 8) {
                 ForEach(report.themes, id: \.self) { theme in
                     Text(theme)
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
                         .background(
-                            LinearGradient(colors: [DayPalette.accent.opacity(0.8), Color(hex: 0x8A6BE0)], startPoint: .leading, endPoint: .trailing),
+                            LinearGradient(colors: [DayPalette.accent.opacity(0.8), NightPalette.lavender], startPoint: .leading, endPoint: .trailing),
                             in: Capsule()
                         )
                         .foregroundStyle(.white)
@@ -102,13 +103,13 @@ struct AnalysisReportView: View {
             Label(title, systemImage: icon)
                 .font(.headline)
                 .foregroundStyle(tint)
+                .accessibilityAddTraits(.isHeader)
             content()
                 .font(.body)
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(NightPalette.cardGradient, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(NightPalette.cardStroke))
+        .journalCard(.night, shadow: false)
     }
 
     /// 关联条目：白天用暖色小卡，梦境用深色小卡，点击跳转
@@ -118,11 +119,11 @@ struct AnalysisReportView: View {
             path.append(isDay ? .day(item.entryId) : .dream(item.entryId))
         } label: {
             VStack(alignment: .leading, spacing: 6) {
-                HStack {
+                HStack(alignment: .firstTextBaseline) {
                     Text(item.date.dayTitle).font(.caption.weight(.semibold))
-                    if let title { Text(title).font(.subheadline.weight(.bold)) }
-                    Spacer()
-                    Image(systemName: "chevron.right").font(.caption)
+                    if let title { Text(title).font(.subheadline.weight(.bold)).lineLimit(1) }
+                    Spacer(minLength: 4)
+                    Image(systemName: "chevron.right").font(.caption.weight(.semibold)).opacity(0.6)
                 }
                 Text(item.snippet).font(.caption).lineLimit(2)
                 Text(item.reason)
@@ -137,8 +138,9 @@ struct AnalysisReportView: View {
             .background(isDay ? AnyShapeStyle(DayPalette.cardGradient) : AnyShapeStyle(NightPalette.chip),
                         in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
         .disabled(title == nil)
+        .accessibilityHint(title == nil ? "原日记已删除" : "打开这篇日记")
     }
 
     private func footer(_ report: DreamAnalysis) -> some View {
