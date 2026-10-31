@@ -6,6 +6,7 @@ struct TimelineScreen: View {
     @State private var mode: TimelineMode = DemoLaunch.initialMode ?? .dual
     @State private var path: [Route] = []
     @State private var compose: ComposeTarget?
+    @State private var showQuickCapture = false
     @State private var showChooser = false
     @State private var showSettings = false
 
@@ -43,11 +44,13 @@ struct TimelineScreen: View {
             }
         }
         .sheet(isPresented: $showSettings) { SettingsView() }
+        .sheet(isPresented: $showQuickCapture) { QuickDreamCaptureView() }
         .confirmationDialog("记录什么？", isPresented: $showChooser, titleVisibility: .visible) {
             Button("☀️ 白天发生了什么") { compose = .day(.now) }
             Button("🌙 昨晚的梦") { compose = .dream(Calendar.current.date(byAdding: .day, value: -1, to: .now)!) }
         }
         .onAppear(perform: handleDemoLaunch)
+        .onOpenURL(perform: handleDeepLink)
     }
 
     // MARK: - Pieces
@@ -174,6 +177,11 @@ struct TimelineScreen: View {
         let dreams = store.sortedDreams
         guard dreams.indices.contains(index) else { return }
         path = [.dream(dreams[index].id)]
+    }
+
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "dreamjournal", url.host == "quick-capture" else { return }
+        showQuickCapture = true
     }
 }
 

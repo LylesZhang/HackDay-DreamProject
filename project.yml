@@ -35,6 +35,24 @@ targets:
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
           NSAllowsArbitraryLoads: true
+        NSMicrophoneUsageDescription: 用于将你刚醒来时说出的梦境转写为记录。
+        NSSpeechRecognitionUsageDescription: 用于将你的梦境语音转写为文字。
+        CFBundleURLTypes:
+          - CFBundleURLSchemes: [dreamjournal]
+    dependencies:
+      - target: DreamJournalWidget
+        embed: true
+  DreamJournalWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - DreamJournalWidget
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.hackday.DreamJournal.Widget
+        PRODUCT_NAME: DreamJournalWidget
+        INFOPLIST_FILE: DreamJournalWidget/Info.plist
+        APPLICATION_EXTENSION_API_ONLY: YES
 schemes:
   DreamJournal:
     build:

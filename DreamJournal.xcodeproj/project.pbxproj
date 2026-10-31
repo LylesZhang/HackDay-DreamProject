@@ -31,6 +31,9 @@
 		C2F31733E13A1D62C25E7433 /* RemoteAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A9031334A1504A60FD07C6 /* RemoteAnalysisService.swift */; };
 		C4A4386D452DFAA2A66C9686 /* AnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8537EFA3398891B7B8564D40 /* AnalysisService.swift */; };
 		E405DB1BC20763A984B4E164 /* JournalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */; };
+		A10000000000000000000001 /* QuickDreamCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* QuickDreamCaptureView.swift */; };
+		A10000000000000000000003 /* DreamJournalWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* DreamJournalWidget.swift */; };
+		A10000000000000000000005 /* DreamJournalWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* DreamJournalWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +63,10 @@
 		F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalStore.swift; sourceTree = "<group>"; };
 		F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamComposeView.swift; sourceTree = "<group>"; };
 		FA66B468580EE33BF4F27C4B /* DayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDetailView.swift; sourceTree = "<group>"; };
+		A10000000000000000000002 /* QuickDreamCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickDreamCaptureView.swift; sourceTree = "<group>"; };
+		A10000000000000000000004 /* DreamJournalWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamJournalWidget.swift; sourceTree = "<group>"; };
+		A10000000000000000000006 /* DreamJournalWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DreamJournalWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -76,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				99BD26193249EE6717C9A75E /* DreamJournal.app */,
+				A10000000000000000000006 /* DreamJournalWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -176,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				72A1E247BDFEAB218440159C /* DreamJournal */,
+				A10000000000000000000008 /* DreamJournalWidget */,
 				0EEA19E0AF345DD834CD148F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -195,8 +204,18 @@
 			children = (
 				D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */,
 				F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */,
+				A10000000000000000000002 /* QuickDreamCaptureView.swift */,
 			);
 			path = Compose;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000008 /* DreamJournalWidget */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000004 /* DreamJournalWidget.swift */,
+				A10000000000000000000007 /* Info.plist */,
+			);
+			path = DreamJournalWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,10 +227,12 @@
 			buildPhases = (
 				174DEA5B0B5D1EA5BBE93879 /* Sources */,
 				96AB23872F297AAA787D3728 /* Resources */,
+				A10000000000000000000009 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A10000000000000000000010 /* PBXTargetDependency */,
 			);
 			name = DreamJournal;
 			packageProductDependencies = (
@@ -219,6 +240,23 @@
 			productName = DreamJournal;
 			productReference = 99BD26193249EE6717C9A75E /* DreamJournal.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A10000000000000000000011 /* DreamJournalWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000012 /* Build configuration list for PBXNativeTarget "DreamJournalWidget" */;
+			buildPhases = (
+				A10000000000000000000013 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DreamJournalWidget;
+			packageProductDependencies = (
+			);
+			productName = DreamJournalWidget;
+			productReference = A10000000000000000000006 /* DreamJournalWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -230,6 +268,10 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					01DB1919392D95B8073EC882 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					A10000000000000000000011 = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
@@ -250,9 +292,42 @@
 			projectRoot = "";
 			targets = (
 				01DB1919392D95B8073EC882 /* DreamJournal */,
+				A10000000000000000000011 /* DreamJournalWidget */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXContainerItemProxy section */
+		A10000000000000000000014 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97284AB96E069BD67BBEBE01 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000011;
+			remoteInfo = DreamJournalWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A10000000000000000000009 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10000000000000000000005 /* DreamJournalWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A10000000000000000000010 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000011 /* DreamJournalWidget */;
+			targetProxy = A10000000000000000000014 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		96AB23872F297AAA787D3728 /* Resources */ = {
@@ -293,6 +368,15 @@
 				B05FF25D8BDFBCC704FCCE1D /* StarfieldView.swift in Sources */,
 				98E9FB56834446D8EDC9C0F6 /* Theme.swift in Sources */,
 				561F5B89E5F56BA6FBC43EA5 /* TimelineScreen.swift in Sources */,
+				A10000000000000000000001 /* QuickDreamCaptureView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000013 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000003 /* DreamJournalWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +546,44 @@
 			};
 			name = Debug;
 		};
+		A10000000000000000000015 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DreamJournalWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal.Widget;
+				PRODUCT_NAME = DreamJournalWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A10000000000000000000016 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DreamJournalWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal.Widget;
+				PRODUCT_NAME = DreamJournalWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -479,6 +601,15 @@
 			buildConfigurations = (
 				ECDAAE531A9DA775CD63DDFC /* Debug */,
 				4C9C6FC9449F056305A388A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A10000000000000000000012 /* Build configuration list for PBXNativeTarget "DreamJournalWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000015 /* Debug */,
+				A10000000000000000000016 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
