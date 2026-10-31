@@ -8,16 +8,28 @@ struct StarfieldView: View {
         var x: Double, y: Double, size: Double, phase: Double, speed: Double
     }
 
-    @State private var stars: [Star] = []
+    /// 固定种子生成，保证每次进入页面星星位置一致，也不依赖 onAppear 时机。
+    private static let allStars: [Star] = {
+        var seed: UInt64 = 0x5EED_D2EA_A000_0001
+        func next() -> Double {
+            seed = seed &* 6364136223846793005 &+ 1442695040888963407
+            return Double(seed >> 11) / Double(1 << 53)
+        }
+        return (0..<160).map { _ in
+            Star(x: next(), y: next(), size: 1.0 + next() * 2.0, phase: next() * 2 * .pi, speed: 0.4 + next() * 1.2)
+        }
+    }()
+
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
+        let stars = Self.allStars.prefix(starCount)
         // 开启“减弱动态效果”时暂停闪烁，也顺便省电
         TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
             Canvas { ctx, size in
                 for s in stars {
-                    let alpha = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * s.speed + s.phase))
+                    let alpha = 0.3 + 0.7 * (0.5 + 0.5 * sin(t * s.speed + s.phase))
                     let rect = CGRect(x: s.x * size.width, y: s.y * size.height, width: s.size, height: s.size)
                     ctx.fill(Path(ellipseIn: rect), with: .color(.white.opacity(alpha)))
                 }
@@ -25,14 +37,5 @@ struct StarfieldView: View {
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)
-        .onAppear {
-            guard stars.isEmpty else { return }
-            var rng = SystemRandomNumberGenerator()
-            stars = (0..<starCount).map { _ in
-                Star(x: .random(in: 0...1, using: &rng), y: .random(in: 0...1, using: &rng),
-                     size: .random(in: 0.8...2.6, using: &rng), phase: .random(in: 0...(2 * .pi), using: &rng),
-                     speed: .random(in: 0.4...1.6, using: &rng))
-            }
-        }
     }
 }

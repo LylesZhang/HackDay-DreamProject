@@ -5,13 +5,25 @@ enum Mood: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var emoji: String {
+    /// 用天气隐喻心情（SF Symbols，任何设备都能正常显示）
+    var symbol: String {
         switch self {
-        case .happy: "😊"
-        case .calm: "😌"
-        case .neutral: "😐"
-        case .stressed: "😣"
-        case .sad: "😢"
+        case .happy: "sun.max.fill"
+        case .calm: "leaf.fill"
+        case .neutral: "cloud.fill"
+        case .stressed: "bolt.fill"
+        case .sad: "cloud.rain.fill"
+        }
+    }
+
+    /// 图标颜色（十六进制）
+    var colorHex: UInt32 {
+        switch self {
+        case .happy: 0xFFB020
+        case .calm: 0x6CC08B
+        case .neutral: 0x9AA5B1
+        case .stressed: 0xF2994A
+        case .sad: 0x5B8DEF
         }
     }
 

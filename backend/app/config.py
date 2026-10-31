@@ -14,10 +14,10 @@ def _bool(name: str, default: bool) -> bool:
 
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "gemini-embedding-001")
-# 前端整个请求 30 秒超时（含 sync），这里给模型留 20 秒
-GEMINI_TIMEOUT_S = float(os.getenv("GEMINI_TIMEOUT_S", "20"))
+# 前端单个请求 100 秒超时，这里给模型留 90 秒（Gemini 高峰期偶尔很慢）
+GEMINI_TIMEOUT_S = float(os.getenv("GEMINI_TIMEOUT_S", "90"))
 USE_EMBEDDING = _bool("USE_EMBEDDING", True)
 
 # 接口里不带时区；“当天 / 前一天”按这个时区划分

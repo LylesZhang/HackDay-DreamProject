@@ -26,7 +26,7 @@ enum DemoLaunch {
     /// day / night / dual
     static var initialMode: TimelineMode? { defaults.string(forKey: "initialMode").flatMap(TimelineMode.init(rawValue:)) }
     /// 启动后直接打开第 N 个梦（0 = 最新）
-    static var openDreamIndex: Int? { defaults.object(forKey: "openDream") as? Int }
+    static var openDreamIndex: Int? { defaults.string(forKey: "openDream").flatMap { Int($0) } }
     /// 打开梦后自动触发 AI 分析
     static var autoAnalyze: Bool { defaults.bool(forKey: "autoAnalyze") }
 }

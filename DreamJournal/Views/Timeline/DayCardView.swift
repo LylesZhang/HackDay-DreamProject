@@ -13,9 +13,7 @@ struct DayCardView: View {
                     .foregroundStyle(DayPalette.accent)
                     .symbolRenderingMode(.hierarchical)
                 Spacer(minLength: 4)
-                Text(entry.mood.emoji)
-                    .font(compact ? .body : .title3)
-                    .accessibilityLabel("心情：\(entry.mood.label)")
+                MoodIcon(mood: entry.mood, size: compact ? 24 : 30)
             }
             Text(entry.title)
                 .font(compact ? .subheadline.weight(.bold) : .headline)

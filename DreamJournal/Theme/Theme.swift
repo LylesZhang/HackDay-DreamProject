@@ -77,8 +77,11 @@ enum DuskPalette {
 }
 
 extension Date {
-    var dayTitle: String { formatted(.dateTime.month().day().weekday(.abbreviated)) }
-    var shortDay: String { formatted(.dateTime.month(.defaultDigits).day()) }
+    private static let zh = Locale(identifier: "zh_CN")
+    /// 10月31日 周六
+    var dayTitle: String { formatted(.dateTime.month().day().weekday(.abbreviated).locale(Self.zh)) }
+    /// 10/31
+    var shortDay: String { formatted(.dateTime.month(.defaultDigits).day().locale(Locale(identifier: "en_US"))) }
 }
 
 /// 标签胶囊
@@ -187,4 +190,11 @@ struct FlowLayout: Layout {
         }
         return rows.filter { !$0.indices.isEmpty }
     }
+}
+
+
+/// 录入表单的分组底色（替代系统灰）
+enum FormRowBackground {
+    static let day = Color.white.opacity(0.85)
+    static let night = Color(hex: 0x2E2150, opacity: 0.75)
 }

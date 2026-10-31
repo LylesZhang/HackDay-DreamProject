@@ -111,7 +111,7 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
   ],
   "emotionalTone": "梦中以「恐惧、兴奋」为主，与白天「焦虑」的心情相互呼应。",
   "suggestion": "试着把让你紧张的事情拆成几个小步骤写下来…",
-  "model": "gemini-2.5-flash",
+  "model": "gemini-3.5-flash-lite",
   "generatedAt": "2026-10-29T01:02:03Z"
 }
 ```
@@ -138,7 +138,7 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
 |---|---|---|
 | 400 | `INVALID_REQUEST` | 请求字段缺失或类型不对 |
 | 503 | `GEMINI_NOT_CONFIGURED` | 后端没有配置 `GEMINI_API_KEY` |
-| 504 | `GEMINI_TIMEOUT` | 模型超过 20 秒没有返回 |
+| 504 | `GEMINI_TIMEOUT` | 模型超过 90 秒没有返回（前端请求超时为 100 秒） |
 | 429 | `GEMINI_RATE_LIMITED` | 触发 Gemini 限流 |
 | 502 | `GEMINI_ERROR` / `GEMINI_BAD_OUTPUT` | 模型调用失败 / 输出无法解析 |
 | 500 | `INTERNAL` | 其他未预期的错误 |

@@ -23,10 +23,12 @@ struct DayComposeView: View {
                     DatePicker("日期", selection: $draft.date, displayedComponents: .date)
                     TextField("一句话标题，比如：第一次面试", text: $draft.title)
                 }
+                .listRowBackground(FormRowBackground.day)
                 Section("今天发生了什么") {
                     TextEditor(text: $draft.content)
                         .frame(minHeight: 140)
                 }
+                .listRowBackground(FormRowBackground.day)
                 Section("心情") {
                     HStack {
                         ForEach(Mood.allCases) { mood in
@@ -34,7 +36,7 @@ struct DayComposeView: View {
                                 draft.mood = mood
                             } label: {
                                 VStack(spacing: 4) {
-                                    Text(mood.emoji).font(.title)
+                                    MoodIcon(mood: mood, size: 40)
                                     Text(mood.label).font(.caption2)
                                 }
                                 .frame(maxWidth: .infinity)
@@ -50,14 +52,16 @@ struct DayComposeView: View {
                         }
                     }
                 }
+                .listRowBackground(FormRowBackground.day)
                 Section("标签（空格分隔）") {
                     TextField("面试 朋友 下雨", text: $tagText)
                 }
+                .listRowBackground(FormRowBackground.day)
             }
             .scrollContentBackground(.hidden)
             .background(DayPalette.backgroundGradient.ignoresSafeArea())
             .foregroundStyle(DayPalette.text)
-            .navigationTitle(isEditing ? "编辑日记" : "☀️ 白天日记")
+            .navigationTitle(isEditing ? "编辑日记" : "白天日记")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("取消") { dismiss() } }

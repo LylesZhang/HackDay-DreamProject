@@ -11,11 +11,13 @@
 		1B8285125118D31B92FFF3A4 /* DreamComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */; };
 		2C2526B914975D4F93F2857D /* DayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91552502FF37E70731AF7F /* DayCardView.swift */; };
 		2C704166C00E569E89C77677 /* DayEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D6005ADA277D79EB27DAB7 /* DayEntry.swift */; };
+		359425725205232070A7FE9F /* MoodIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF70100B7CC1D0D446E98B5A /* MoodIcon.swift */; };
 		35C642415803D8E8AACAAC40 /* DreamCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40945C15DAD6A643595B0E6A /* DreamCardView.swift */; };
 		A1D0E5F1C0FFEE0000000001 /* DreamNotesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E5F1C0FFEE0000000002 /* DreamNotesList.swift */; };
 		377A28ECB2987E09D30D1835 /* DreamEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BBB8A7B5DECA35D1BE76EF /* DreamEntry.swift */; };
 		3988DFC99874B0F31A9AC795 /* DreamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075509FD55EDA3A9DA265223 /* DreamDetailView.swift */; };
 		3DB18ED1955E7368635A9047 /* AnalysisReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30748061657350A9106E5AAF /* AnalysisReportView.swift */; };
+		4A2C0321B39CED84D8D92996 /* QuickDreamCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A096050C65F183117775FE /* QuickDreamCaptureView.swift */; };
 		50BE3088B2B71B9684E97C32 /* APIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F3A470F6D043BA935049CE /* APIModels.swift */; };
 		561F5B89E5F56BA6FBC43EA5 /* TimelineScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C520287FF9C68C1685B4AA2E /* TimelineScreen.swift */; };
 		5E9BF73AEF87E10118BB96BA /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3F3BD7A53C57ED8E9448BC /* SampleData.swift */; };
@@ -32,10 +34,33 @@
 		C2F31733E13A1D62C25E7433 /* RemoteAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A9031334A1504A60FD07C6 /* RemoteAnalysisService.swift */; };
 		C4A4386D452DFAA2A66C9686 /* AnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8537EFA3398891B7B8564D40 /* AnalysisService.swift */; };
 		E405DB1BC20763A984B4E164 /* JournalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */; };
-		A10000000000000000000001 /* QuickDreamCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* QuickDreamCaptureView.swift */; };
-		A10000000000000000000003 /* DreamJournalWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* DreamJournalWidget.swift */; };
-		A10000000000000000000005 /* DreamJournalWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* DreamJournalWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F2D7A05A266544DFBB411483 /* DreamJournalWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA9010ABFF9BBE86C497077 /* DreamJournalWidget.swift */; };
+		FFA559A1641CB7F0E0F6C2FE /* DreamJournalWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8DC4CE84E0331203C94CBBFD /* DreamJournalWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C4C3A8F3FFEBBA8782A7E8FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97284AB96E069BD67BBEBE01 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 587494296B4810B44BF54E88;
+			remoteInfo = DreamJournalWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		478FDB060A2FBA901DF1AAE3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FFA559A1641CB7F0E0F6C2FE /* DreamJournalWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		075509FD55EDA3A9DA265223 /* DreamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamDetailView.swift; sourceTree = "<group>"; };
@@ -48,6 +73,7 @@
 		4F91552502FF37E70731AF7F /* DayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCardView.swift; sourceTree = "<group>"; };
 		50D6005ADA277D79EB27DAB7 /* DayEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEntry.swift; sourceTree = "<group>"; };
 		51D5314F8BF970BA9A922B3F /* DreamAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamAnalysis.swift; sourceTree = "<group>"; };
+		5FA9010ABFF9BBE86C497077 /* DreamJournalWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamJournalWidget.swift; sourceTree = "<group>"; };
 		616E2579A5A85FB1CC02FF3F /* MockAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalysisService.swift; sourceTree = "<group>"; };
 		65FF20F72C7D74059A17DBFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6C3F3BD7A53C57ED8E9448BC /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
@@ -55,20 +81,20 @@
 		8102D41BED80D2E012392930 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83BF69B1A40DE952069BD435 /* StarfieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarfieldView.swift; sourceTree = "<group>"; };
 		8537EFA3398891B7B8564D40 /* AnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisService.swift; sourceTree = "<group>"; };
+		8DC4CE84E0331203C94CBBFD /* DreamJournalWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = DreamJournalWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		99BD26193249EE6717C9A75E /* DreamJournal.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DreamJournal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B14B1E03F3CF058EE9F21D21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C0CE85B312D98334932AF800 /* DreamJournalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamJournalApp.swift; sourceTree = "<group>"; };
 		C520287FF9C68C1685B4AA2E /* TimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineScreen.swift; sourceTree = "<group>"; };
 		D3F3A470F6D043BA935049CE /* APIModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModels.swift; sourceTree = "<group>"; };
 		D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayComposeView.swift; sourceTree = "<group>"; };
 		DE5E95976B18567FC44E4590 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		DF70100B7CC1D0D446E98B5A /* MoodIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodIcon.swift; sourceTree = "<group>"; };
 		E74169DE36B9130CBA9DB49B /* DualCardRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualCardRow.swift; sourceTree = "<group>"; };
 		F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalStore.swift; sourceTree = "<group>"; };
+		F1A096050C65F183117775FE /* QuickDreamCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickDreamCaptureView.swift; sourceTree = "<group>"; };
 		F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamComposeView.swift; sourceTree = "<group>"; };
 		FA66B468580EE33BF4F27C4B /* DayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDetailView.swift; sourceTree = "<group>"; };
-		A10000000000000000000002 /* QuickDreamCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickDreamCaptureView.swift; sourceTree = "<group>"; };
-		A10000000000000000000004 /* DreamJournalWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamJournalWidget.swift; sourceTree = "<group>"; };
-		A10000000000000000000006 /* DreamJournalWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DreamJournalWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		A10000000000000000000007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -85,7 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				99BD26193249EE6717C9A75E /* DreamJournal.app */,
-				A10000000000000000000006 /* DreamJournalWidget.appex */,
+				8DC4CE84E0331203C94CBBFD /* DreamJournalWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +133,15 @@
 				82C29BA1ACA7DCBDD08B609A /* Timeline */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		2977619EBFF08CB69872F691 /* DreamJournalWidget */ = {
+			isa = PBXGroup;
+			children = (
+				5FA9010ABFF9BBE86C497077 /* DreamJournalWidget.swift */,
+				B14B1E03F3CF058EE9F21D21 /* Info.plist */,
+			);
+			path = DreamJournalWidget;
 			sourceTree = "<group>";
 		};
 		5E2E7D141E02A615BBB6CC79 /* Services */ = {
@@ -146,6 +181,7 @@
 		7D95D02C7145D4B3140EEBE0 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
+				DF70100B7CC1D0D446E98B5A /* MoodIcon.swift */,
 				83BF69B1A40DE952069BD435 /* StarfieldView.swift */,
 				DE5E95976B18567FC44E4590 /* Theme.swift */,
 			);
@@ -187,7 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				72A1E247BDFEAB218440159C /* DreamJournal */,
-				A10000000000000000000008 /* DreamJournalWidget */,
+				2977619EBFF08CB69872F691 /* DreamJournalWidget */,
 				0EEA19E0AF345DD834CD148F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -207,18 +243,9 @@
 			children = (
 				D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */,
 				F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */,
-				A10000000000000000000002 /* QuickDreamCaptureView.swift */,
+				F1A096050C65F183117775FE /* QuickDreamCaptureView.swift */,
 			);
 			path = Compose;
-			sourceTree = "<group>";
-		};
-		A10000000000000000000008 /* DreamJournalWidget */ = {
-			isa = PBXGroup;
-			children = (
-				A10000000000000000000004 /* DreamJournalWidget.swift */,
-				A10000000000000000000007 /* Info.plist */,
-			);
-			path = DreamJournalWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,12 +257,12 @@
 			buildPhases = (
 				174DEA5B0B5D1EA5BBE93879 /* Sources */,
 				96AB23872F297AAA787D3728 /* Resources */,
-				A10000000000000000000009 /* Embed App Extensions */,
+				478FDB060A2FBA901DF1AAE3 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A10000000000000000000010 /* PBXTargetDependency */,
+				2262B0450A1DE84C024141AA /* PBXTargetDependency */,
 			);
 			name = DreamJournal;
 			packageProductDependencies = (
@@ -244,11 +271,11 @@
 			productReference = 99BD26193249EE6717C9A75E /* DreamJournal.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A10000000000000000000011 /* DreamJournalWidget */ = {
+		587494296B4810B44BF54E88 /* DreamJournalWidget */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A10000000000000000000012 /* Build configuration list for PBXNativeTarget "DreamJournalWidget" */;
+			buildConfigurationList = 4C6168DF2E85EB6D69753FF6 /* Build configuration list for PBXNativeTarget "DreamJournalWidget" */;
 			buildPhases = (
-				A10000000000000000000013 /* Sources */,
+				96E192B56A5022DFF7896101 /* Sources */,
 			);
 			buildRules = (
 			);
@@ -258,7 +285,7 @@
 			packageProductDependencies = (
 			);
 			productName = DreamJournalWidget;
-			productReference = A10000000000000000000006 /* DreamJournalWidget.appex */;
+			productReference = 8DC4CE84E0331203C94CBBFD /* DreamJournalWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -274,18 +301,18 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
-					A10000000000000000000011 = {
+					587494296B4810B44BF54E88 = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 75488B7DCFDBDD784FDB56B1 /* Build configuration list for PBXProject "DreamJournal" */;
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
-				en,
+				"zh-Hans",
 			);
 			mainGroup = DD6CAA707FA5B0CFF5EE4406;
 			minimizedProjectReferenceProxies = 1;
@@ -295,42 +322,10 @@
 			projectRoot = "";
 			targets = (
 				01DB1919392D95B8073EC882 /* DreamJournal */,
-				A10000000000000000000011 /* DreamJournalWidget */,
+				587494296B4810B44BF54E88 /* DreamJournalWidget */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXContainerItemProxy section */
-		A10000000000000000000014 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 97284AB96E069BD67BBEBE01 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A10000000000000000000011;
-			remoteInfo = DreamJournalWidget;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		A10000000000000000000009 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				A10000000000000000000005 /* DreamJournalWidget.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A10000000000000000000010 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A10000000000000000000011 /* DreamJournalWidget */;
-			targetProxy = A10000000000000000000014 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		96AB23872F297AAA787D3728 /* Resources */ = {
@@ -366,27 +361,53 @@
 				E405DB1BC20763A984B4E164 /* JournalStore.swift in Sources */,
 				83830905CC847E4764B9F178 /* MockAnalysisService.swift in Sources */,
 				8C36556477C49638A5720B04 /* ModeToggle.swift in Sources */,
+				359425725205232070A7FE9F /* MoodIcon.swift in Sources */,
+				4A2C0321B39CED84D8D92996 /* QuickDreamCaptureView.swift in Sources */,
 				C2F31733E13A1D62C25E7433 /* RemoteAnalysisService.swift in Sources */,
 				5E9BF73AEF87E10118BB96BA /* SampleData.swift in Sources */,
 				A4D03E1E61AD447B1BCCC598 /* SettingsView.swift in Sources */,
 				B05FF25D8BDFBCC704FCCE1D /* StarfieldView.swift in Sources */,
 				98E9FB56834446D8EDC9C0F6 /* Theme.swift in Sources */,
 				561F5B89E5F56BA6FBC43EA5 /* TimelineScreen.swift in Sources */,
-				A10000000000000000000001 /* QuickDreamCaptureView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A10000000000000000000013 /* Sources */ = {
+		96E192B56A5022DFF7896101 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10000000000000000000003 /* DreamJournalWidget.swift in Sources */,
+				F2D7A05A266544DFBB411483 /* DreamJournalWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2262B0450A1DE84C024141AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 587494296B4810B44BF54E88 /* DreamJournalWidget */;
+			targetProxy = C4C3A8F3FFEBBA8782A7E8FD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		3C7F214AE0EE59FB8117B3A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = DreamJournalWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal.Widget;
+				PRODUCT_NAME = DreamJournalWidget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		4C9C6FC9449F056305A388A5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -464,6 +485,23 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
+		};
+		BFDA0FAD68EB06B14EC67605 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = DreamJournalWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal.Widget;
+				PRODUCT_NAME = DreamJournalWidget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		C053F2804CA3A5CAD250D20D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -550,47 +588,18 @@
 			};
 			name = Debug;
 		};
-		A10000000000000000000015 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = DreamJournalWidget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal.Widget;
-				PRODUCT_NAME = DreamJournalWidget;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		A10000000000000000000016 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = DreamJournalWidget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal.Widget;
-				PRODUCT_NAME = DreamJournalWidget;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4C6168DF2E85EB6D69753FF6 /* Build configuration list for PBXNativeTarget "DreamJournalWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BFDA0FAD68EB06B14EC67605 /* Debug */,
+				3C7F214AE0EE59FB8117B3A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		75488B7DCFDBDD784FDB56B1 /* Build configuration list for PBXProject "DreamJournal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -605,15 +614,6 @@
 			buildConfigurations = (
 				ECDAAE531A9DA775CD63DDFC /* Debug */,
 				4C9C6FC9449F056305A388A5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		A10000000000000000000012 /* Build configuration list for PBXNativeTarget "DreamJournalWidget" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A10000000000000000000015 /* Debug */,
-				A10000000000000000000016 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

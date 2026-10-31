@@ -151,8 +151,13 @@ async def analyze(dream: DreamEntry, days: list[Candidate], dreams: list[Candida
         temperature=0.7,
         response_mime_type="application/json",
         response_schema=response_schema([c.id for c in days], [c.id for c in dreams]),
-        # 2.5 系列默认会“思考”，关掉能把延迟压到几秒内
-        thinking_config=types.ThinkingConfig(thinking_budget=0),
+        # 模型默认会“思考”，关掉（或降到最低）能把延迟压到几秒内。
+        # 2.x 用 thinking_budget；3.x 改用 thinking_level（3.8-flash 不支持 MINIMAL，最低是 LOW）
+        thinking_config=(
+            types.ThinkingConfig(thinking_budget=0)
+            if config.GEMINI_MODEL.startswith("gemini-2")
+            else types.ThinkingConfig(thinking_level=types.ThinkingLevel.LOW)
+        ),
     )
     try:
         resp = await asyncio.wait_for(
