@@ -1,0 +1,489 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		17BB79E1E6B4F8A10439A43D /* DayComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */; };
+		1B8285125118D31B92FFF3A4 /* DreamComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */; };
+		2C2526B914975D4F93F2857D /* DayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91552502FF37E70731AF7F /* DayCardView.swift */; };
+		2C704166C00E569E89C77677 /* DayEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D6005ADA277D79EB27DAB7 /* DayEntry.swift */; };
+		35C642415803D8E8AACAAC40 /* DreamCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40945C15DAD6A643595B0E6A /* DreamCardView.swift */; };
+		377A28ECB2987E09D30D1835 /* DreamEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BBB8A7B5DECA35D1BE76EF /* DreamEntry.swift */; };
+		3988DFC99874B0F31A9AC795 /* DreamDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075509FD55EDA3A9DA265223 /* DreamDetailView.swift */; };
+		3DB18ED1955E7368635A9047 /* AnalysisReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30748061657350A9106E5AAF /* AnalysisReportView.swift */; };
+		50BE3088B2B71B9684E97C32 /* APIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F3A470F6D043BA935049CE /* APIModels.swift */; };
+		561F5B89E5F56BA6FBC43EA5 /* TimelineScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C520287FF9C68C1685B4AA2E /* TimelineScreen.swift */; };
+		5E9BF73AEF87E10118BB96BA /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3F3BD7A53C57ED8E9448BC /* SampleData.swift */; };
+		72B35332E1EC1ED1F5EBCBF3 /* DualCardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74169DE36B9130CBA9DB49B /* DualCardRow.swift */; };
+		83830905CC847E4764B9F178 /* MockAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616E2579A5A85FB1CC02FF3F /* MockAnalysisService.swift */; };
+		846BDB44574BC21CDEF70311 /* DreamAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D5314F8BF970BA9A922B3F /* DreamAnalysis.swift */; };
+		8C36556477C49638A5720B04 /* ModeToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D02031F1F52947BCDC2B1A8 /* ModeToggle.swift */; };
+		90AE539E87F2332378A7BFC8 /* DreamJournalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE85B312D98334932AF800 /* DreamJournalApp.swift */; };
+		95AAFD6D78DB1EAF32A98750 /* DayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66B468580EE33BF4F27C4B /* DayDetailView.swift */; };
+		98E9FB56834446D8EDC9C0F6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5E95976B18567FC44E4590 /* Theme.swift */; };
+		A4D03E1E61AD447B1BCCC598 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F750DF431E80EE7DE73A06 /* SettingsView.swift */; };
+		B05FF25D8BDFBCC704FCCE1D /* StarfieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BF69B1A40DE952069BD435 /* StarfieldView.swift */; };
+		BE79F0EFA279859794616E76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8102D41BED80D2E012392930 /* Assets.xcassets */; };
+		C2F31733E13A1D62C25E7433 /* RemoteAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A9031334A1504A60FD07C6 /* RemoteAnalysisService.swift */; };
+		C4A4386D452DFAA2A66C9686 /* AnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8537EFA3398891B7B8564D40 /* AnalysisService.swift */; };
+		E405DB1BC20763A984B4E164 /* JournalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		075509FD55EDA3A9DA265223 /* DreamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamDetailView.swift; sourceTree = "<group>"; };
+		0D02031F1F52947BCDC2B1A8 /* ModeToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeToggle.swift; sourceTree = "<group>"; };
+		13A9031334A1504A60FD07C6 /* RemoteAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAnalysisService.swift; sourceTree = "<group>"; };
+		29F750DF431E80EE7DE73A06 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		30748061657350A9106E5AAF /* AnalysisReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisReportView.swift; sourceTree = "<group>"; };
+		40945C15DAD6A643595B0E6A /* DreamCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamCardView.swift; sourceTree = "<group>"; };
+		4F91552502FF37E70731AF7F /* DayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCardView.swift; sourceTree = "<group>"; };
+		50D6005ADA277D79EB27DAB7 /* DayEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEntry.swift; sourceTree = "<group>"; };
+		51D5314F8BF970BA9A922B3F /* DreamAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamAnalysis.swift; sourceTree = "<group>"; };
+		616E2579A5A85FB1CC02FF3F /* MockAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalysisService.swift; sourceTree = "<group>"; };
+		65FF20F72C7D74059A17DBFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6C3F3BD7A53C57ED8E9448BC /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		80BBB8A7B5DECA35D1BE76EF /* DreamEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamEntry.swift; sourceTree = "<group>"; };
+		8102D41BED80D2E012392930 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		83BF69B1A40DE952069BD435 /* StarfieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarfieldView.swift; sourceTree = "<group>"; };
+		8537EFA3398891B7B8564D40 /* AnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisService.swift; sourceTree = "<group>"; };
+		99BD26193249EE6717C9A75E /* DreamJournal.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DreamJournal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0CE85B312D98334932AF800 /* DreamJournalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamJournalApp.swift; sourceTree = "<group>"; };
+		C520287FF9C68C1685B4AA2E /* TimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineScreen.swift; sourceTree = "<group>"; };
+		D3F3A470F6D043BA935049CE /* APIModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModels.swift; sourceTree = "<group>"; };
+		D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayComposeView.swift; sourceTree = "<group>"; };
+		DE5E95976B18567FC44E4590 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		E74169DE36B9130CBA9DB49B /* DualCardRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualCardRow.swift; sourceTree = "<group>"; };
+		F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalStore.swift; sourceTree = "<group>"; };
+		F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamComposeView.swift; sourceTree = "<group>"; };
+		FA66B468580EE33BF4F27C4B /* DayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDetailView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		017A8BCF63AD9ACB4F971607 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				F0B1BA3D74894C6F278CA6ED /* JournalStore.swift */,
+				6C3F3BD7A53C57ED8E9448BC /* SampleData.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
+		0EEA19E0AF345DD834CD148F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				99BD26193249EE6717C9A75E /* DreamJournal.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		112127078B7D31E9D19D96CA /* App */ = {
+			isa = PBXGroup;
+			children = (
+				C0CE85B312D98334932AF800 /* DreamJournalApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		24FE92A76EF6D58D766072BF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				746A56D48F169FC9E9705618 /* Analysis */,
+				EDD2BF6086922075F3A27064 /* Compose */,
+				9DBBC95AD0AA1287C9E2F394 /* Settings */,
+				82C29BA1ACA7DCBDD08B609A /* Timeline */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5E2E7D141E02A615BBB6CC79 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8537EFA3398891B7B8564D40 /* AnalysisService.swift */,
+				D3F3A470F6D043BA935049CE /* APIModels.swift */,
+				616E2579A5A85FB1CC02FF3F /* MockAnalysisService.swift */,
+				13A9031334A1504A60FD07C6 /* RemoteAnalysisService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		72A1E247BDFEAB218440159C /* DreamJournal */ = {
+			isa = PBXGroup;
+			children = (
+				112127078B7D31E9D19D96CA /* App */,
+				DFD125D77EFB36F837E4EDB5 /* Models */,
+				865E025D6094E7B723AAE08C /* Resources */,
+				5E2E7D141E02A615BBB6CC79 /* Services */,
+				017A8BCF63AD9ACB4F971607 /* Store */,
+				7D95D02C7145D4B3140EEBE0 /* Theme */,
+				24FE92A76EF6D58D766072BF /* Views */,
+			);
+			path = DreamJournal;
+			sourceTree = "<group>";
+		};
+		746A56D48F169FC9E9705618 /* Analysis */ = {
+			isa = PBXGroup;
+			children = (
+				30748061657350A9106E5AAF /* AnalysisReportView.swift */,
+				075509FD55EDA3A9DA265223 /* DreamDetailView.swift */,
+			);
+			path = Analysis;
+			sourceTree = "<group>";
+		};
+		7D95D02C7145D4B3140EEBE0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				83BF69B1A40DE952069BD435 /* StarfieldView.swift */,
+				DE5E95976B18567FC44E4590 /* Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		82C29BA1ACA7DCBDD08B609A /* Timeline */ = {
+			isa = PBXGroup;
+			children = (
+				4F91552502FF37E70731AF7F /* DayCardView.swift */,
+				FA66B468580EE33BF4F27C4B /* DayDetailView.swift */,
+				40945C15DAD6A643595B0E6A /* DreamCardView.swift */,
+				E74169DE36B9130CBA9DB49B /* DualCardRow.swift */,
+				0D02031F1F52947BCDC2B1A8 /* ModeToggle.swift */,
+				C520287FF9C68C1685B4AA2E /* TimelineScreen.swift */,
+			);
+			path = Timeline;
+			sourceTree = "<group>";
+		};
+		865E025D6094E7B723AAE08C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8102D41BED80D2E012392930 /* Assets.xcassets */,
+				65FF20F72C7D74059A17DBFA /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		9DBBC95AD0AA1287C9E2F394 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				29F750DF431E80EE7DE73A06 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		DD6CAA707FA5B0CFF5EE4406 = {
+			isa = PBXGroup;
+			children = (
+				72A1E247BDFEAB218440159C /* DreamJournal */,
+				0EEA19E0AF345DD834CD148F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DFD125D77EFB36F837E4EDB5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				50D6005ADA277D79EB27DAB7 /* DayEntry.swift */,
+				51D5314F8BF970BA9A922B3F /* DreamAnalysis.swift */,
+				80BBB8A7B5DECA35D1BE76EF /* DreamEntry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EDD2BF6086922075F3A27064 /* Compose */ = {
+			isa = PBXGroup;
+			children = (
+				D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */,
+				F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */,
+			);
+			path = Compose;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		01DB1919392D95B8073EC882 /* DreamJournal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D044D7F0E6705E76C51B792 /* Build configuration list for PBXNativeTarget "DreamJournal" */;
+			buildPhases = (
+				174DEA5B0B5D1EA5BBE93879 /* Sources */,
+				96AB23872F297AAA787D3728 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DreamJournal;
+			packageProductDependencies = (
+			);
+			productName = DreamJournal;
+			productReference = 99BD26193249EE6717C9A75E /* DreamJournal.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		97284AB96E069BD67BBEBE01 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					01DB1919392D95B8073EC882 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 75488B7DCFDBDD784FDB56B1 /* Build configuration list for PBXProject "DreamJournal" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DD6CAA707FA5B0CFF5EE4406;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0EEA19E0AF345DD834CD148F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				01DB1919392D95B8073EC882 /* DreamJournal */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		96AB23872F297AAA787D3728 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE79F0EFA279859794616E76 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		174DEA5B0B5D1EA5BBE93879 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50BE3088B2B71B9684E97C32 /* APIModels.swift in Sources */,
+				3DB18ED1955E7368635A9047 /* AnalysisReportView.swift in Sources */,
+				C4A4386D452DFAA2A66C9686 /* AnalysisService.swift in Sources */,
+				2C2526B914975D4F93F2857D /* DayCardView.swift in Sources */,
+				17BB79E1E6B4F8A10439A43D /* DayComposeView.swift in Sources */,
+				95AAFD6D78DB1EAF32A98750 /* DayDetailView.swift in Sources */,
+				2C704166C00E569E89C77677 /* DayEntry.swift in Sources */,
+				846BDB44574BC21CDEF70311 /* DreamAnalysis.swift in Sources */,
+				35C642415803D8E8AACAAC40 /* DreamCardView.swift in Sources */,
+				1B8285125118D31B92FFF3A4 /* DreamComposeView.swift in Sources */,
+				3988DFC99874B0F31A9AC795 /* DreamDetailView.swift in Sources */,
+				377A28ECB2987E09D30D1835 /* DreamEntry.swift in Sources */,
+				90AE539E87F2332378A7BFC8 /* DreamJournalApp.swift in Sources */,
+				72B35332E1EC1ED1F5EBCBF3 /* DualCardRow.swift in Sources */,
+				E405DB1BC20763A984B4E164 /* JournalStore.swift in Sources */,
+				83830905CC847E4764B9F178 /* MockAnalysisService.swift in Sources */,
+				8C36556477C49638A5720B04 /* ModeToggle.swift in Sources */,
+				C2F31733E13A1D62C25E7433 /* RemoteAnalysisService.swift in Sources */,
+				5E9BF73AEF87E10118BB96BA /* SampleData.swift in Sources */,
+				A4D03E1E61AD447B1BCCC598 /* SettingsView.swift in Sources */,
+				B05FF25D8BDFBCC704FCCE1D /* StarfieldView.swift in Sources */,
+				98E9FB56834446D8EDC9C0F6 /* Theme.swift in Sources */,
+				561F5B89E5F56BA6FBC43EA5 /* TimelineScreen.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4C9C6FC9449F056305A388A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DreamJournal/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal;
+				PRODUCT_NAME = DreamJournal;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		93D0F72B8760BB3F150B3CEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C053F2804CA3A5CAD250D20D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		ECDAAE531A9DA775CD63DDFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DreamJournal/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackday.DreamJournal;
+				PRODUCT_NAME = DreamJournal;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		75488B7DCFDBDD784FDB56B1 /* Build configuration list for PBXProject "DreamJournal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C053F2804CA3A5CAD250D20D /* Debug */,
+				93D0F72B8760BB3F150B3CEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9D044D7F0E6705E76C51B792 /* Build configuration list for PBXNativeTarget "DreamJournal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ECDAAE531A9DA775CD63DDFC /* Debug */,
+				4C9C6FC9449F056305A388A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 97284AB96E069BD67BBEBE01 /* Project object */;
+}
