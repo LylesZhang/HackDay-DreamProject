@@ -132,6 +132,23 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
 ```
 前端会把 `message` 显示在弹窗里，并提供“改用 Mock 重试”。
 
+后端实际会返回的错误码：
+
+| HTTP | `code` | 场景 |
+|---|---|---|
+| 400 | `INVALID_REQUEST` | 请求字段缺失或类型不对 |
+| 503 | `GEMINI_NOT_CONFIGURED` | 后端没有配置 `GEMINI_API_KEY` |
+| 504 | `GEMINI_TIMEOUT` | 模型超过 20 秒没有返回 |
+| 429 | `GEMINI_RATE_LIMITED` | 触发 Gemini 限流 |
+| 502 | `GEMINI_ERROR` / `GEMINI_BAD_OUTPUT` | 模型调用失败 / 输出无法解析 |
+| 500 | `INTERNAL` | 其他未预期的错误 |
+
+### 后端实现约定（backend/）
+- `sync` 是全量覆盖：本次没上传的旧日记会从后端删除，所以分析结果不会引用已经删掉的日记
+- `id` 比较不区分大小写，后端统一转成大写（和 Swift `UUID` 的编码一致）
+- 接口里不带时区。“当天 / 前一天”按后端 `USER_TZ` 划分，默认 `Asia/Shanghai`
+- 响应里的日期一律是 `2026-10-29T01:02:03Z` 格式（不带微秒）
+
 ---
 
 ## 给后端同学的实现建议
@@ -162,6 +179,6 @@ relatedDays 和 relatedDreams 只能从候选里挑真正相关的，并在 reas
 ### 本地联调
 ```bash
 # 后端跑在本机 8000 端口后，App 里：设置 → 分析服务选“后端（Gemini）”→ 地址填 http://localhost:8000
-curl -X POST http://localhost:8000/api/v1/dreams/analyze -H 'Content-Type: application/json' -d @sample_request.json
+curl -X POST http://localhost:8000/api/v1/dreams/analyze -H 'Content-Type: application/json' -d @backend/tests/sample_request.json
 ```
 真机调试时把地址换成电脑的局域网 IP，例如 `http://192.168.1.23:8000`。Info.plist 已经允许 HTTP 和本地网络访问。

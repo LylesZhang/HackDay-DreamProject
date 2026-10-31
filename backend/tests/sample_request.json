@@ -1,0 +1,26 @@
+{
+  "userId": "8C1F2E7A-0B9D-4C55-9E0A-6F3B1D2C4A11",
+  "dream": {
+    "id": "E0000000-0000-4000-8000-000000000003",
+    "title": "从高楼坠落",
+    "content": "我站在公司的高楼顶上，脚下一滑掉了下去。快要落地的时候突然飞了起来，越飞越高，下面的人都在看我。",
+    "dreamDate": "2026-10-27T15:00:00Z",
+    "recordedAt": "2026-10-27T23:00:00Z",
+    "emotions": [
+      "恐惧",
+      "兴奋"
+    ],
+    "vividness": 5,
+    "isLucid": false,
+    "tags": [
+      "坠落",
+      "飞",
+      "工作"
+    ]
+  },
+  "options": {
+    "lookbackDays": 7,
+    "maxRelated": 5,
+    "language": "zh"
+  }
+}
