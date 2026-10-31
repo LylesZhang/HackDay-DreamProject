@@ -3,21 +3,16 @@ import Speech
 import AVFAudio
 
 /// 从锁屏入口唤起的轻量记录页：先抓住记忆，再回到完整编辑页慢慢补充。
+/// 顶部会弹出 AI 从最近几天的梦里提炼的关键词，点一下就写进记录。
 struct QuickDreamCaptureView: View {
     @Environment(JournalStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
     @StateObject private var speechRecorder = SpeechRecorder()
     @State private var note = ""
-    @State private var selectedKeywords: Set<String> = []
     /// 开始录音时已有的文字；转写结果接在它后面，而不是覆盖用户手打的内容
     @State private var noteBeforeRecording = ""
-
-    private let keywordGroups = [
-        ("地点", ["家", "学校", "陌生城市", "海边", "森林"]),
-        ("人物", ["家人", "朋友", "前任", "陌生人", "自己"]),
-        ("动作", ["飞行", "逃跑", "寻找", "坠落", "重逢"])
-    ]
+    @State private var showSuggestions = true
 
     var body: some View {
         NavigationStack {
@@ -26,42 +21,36 @@ struct QuickDreamCaptureView: View {
                 StarfieldView(starCount: 45).ignoresSafeArea()
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 22) {
                         header
+                        if showSuggestions, let batch = store.keywordSuggestions, !batch.suggestions.isEmpty {
+                            KeywordSuggestionCard(
+                                batch: batch,
+                                isUsed: { note.contains($0) },
+                                onPick: { insert($0.name) },
+                                onDismiss: { withAnimation(.snappy) { showSuggestions = false } }
+                            )
+                            .transition(.asymmetric(insertion: .scale(scale: 0.9).combined(with: .opacity),
+                                                    removal: .opacity.combined(with: .move(edge: .top))))
+                        }
                         voiceCapture
-                        keywordPicker
-                        TextEditor(text: $note)
-                            .font(.body)
-                            .foregroundStyle(NightPalette.text)
-                            .frame(minHeight: 130)
-                            .padding(12)
-                            .scrollContentBackground(.hidden)
-                            .overlay(alignment: .topLeading) {
-                                if note.isEmpty {
-                                    Text("或者直接写下来…")
-                                        .foregroundStyle(NightPalette.secondaryText.opacity(0.7))
-                                        .padding(.horizontal, 17)
-                                        .padding(.vertical, 20)
-                                        .allowsHitTesting(false)
-                                        .accessibilityHidden(true)
-                                }
-                            }
-                            .journalCard(.night, shadow: false)
-                            .accessibilityLabel("梦境文字记录")
+                        noteEditor
+                        keywordSection
                     }
                     .padding(20)
                     .padding(.bottom, 30)
+                    .animation(.spring(response: 0.5, dampingFraction: 0.75), value: store.keywordSuggestions?.basedOn)
                 }
             }
-            .navigationTitle("刚刚梦见了什么？")
+            .navigationTitle("What did you dream?")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("稍后再记") { dismiss() }
+                    Button("Later") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存", action: save)
-                        .disabled(note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedKeywords.isEmpty)
+                    Button("Save", action: save)
+                        .disabled(note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
             .onChange(of: speechRecorder.transcript) { _, transcript in
@@ -69,6 +58,8 @@ struct QuickDreamCaptureView: View {
                 note = noteBeforeRecording.isEmpty ? transcript : noteBeforeRecording + " " + transcript
             }
             .onDisappear { speechRecorder.stopRecording() }
+            // 建议还没生成（或已过期）时现场提炼，生成好后卡片会弹出来
+            .task { await store.refreshKeywordSuggestions(using: AnalysisServiceFactory.current()) }
         }
         .tint(NightPalette.accent)
         .environment(\.colorScheme, .dark)
@@ -76,10 +67,10 @@ struct QuickDreamCaptureView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("先留下几个片段就好")
+            Text("A few fragments are enough")
                 .font(.title2.weight(.bold))
                 .foregroundStyle(NightPalette.text)
-            Text("可以说出来，也可以点选下面的关键词；细节晚些时候再整理。")
+            Text("Say it, type it, or tap keywords. You can fill in the details later.")
                 .font(.subheadline)
                 .foregroundStyle(NightPalette.secondaryText)
         }
@@ -93,7 +84,7 @@ struct QuickDreamCaptureView: View {
                         .font(.title3)
                         .contentTransition(.symbolEffect(.replace))
                         .symbolEffect(.pulse, isActive: speechRecorder.isRecording)
-                    Text(speechRecorder.isRecording ? "结束语音输入" : "说一说这个梦")
+                    Text(speechRecorder.isRecording ? "Stop recording" : "Talk it through")
                         .font(.headline)
                 }
                 .foregroundStyle(NightPalette.ink)
@@ -111,32 +102,46 @@ struct QuickDreamCaptureView: View {
                     .font(.caption)
                     .foregroundStyle(.orange)
             } else if speechRecorder.isRecording {
-                Text("正在聆听…")
+                Text("Listening…")
                     .font(.caption)
                     .foregroundStyle(NightPalette.secondaryText)
             }
         }
     }
 
-    private var keywordPicker: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            ForEach(keywordGroups, id: \.0) { group in
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(group.0)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(NightPalette.secondaryText)
-                        .accessibilityAddTraits(.isHeader)
-                    FlowChips(options: group.1, selection: keywordBinding)
+    private var noteEditor: some View {
+        TextEditor(text: $note)
+            .font(.body)
+            .foregroundStyle(NightPalette.text)
+            .frame(minHeight: 130)
+            .padding(12)
+            .scrollContentBackground(.hidden)
+            .overlay(alignment: .topLeading) {
+                if note.isEmpty {
+                    Text("Or just write it down…")
+                        .foregroundStyle(NightPalette.secondaryText.opacity(0.7))
+                        .padding(.horizontal, 17)
+                        .padding(.vertical, 20)
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
                 }
             }
+            .journalCard(.night, shadow: false)
+            .accessibilityLabel("Dream notes")
+    }
+
+    private var keywordSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Your keywords")
+                .font(.headline)
+                .foregroundStyle(NightPalette.text)
+                .accessibilityAddTraits(.isHeader)
+            KeywordPicker(isUsed: { $0.isMentioned(in: note) }, onPick: { insert($0.name) })
         }
     }
 
-    private var keywordBinding: Binding<[String]> {
-        Binding(
-            get: { Array(selectedKeywords) },
-            set: { selectedKeywords = Set($0) }
-        )
+    private func insert(_ word: String) {
+        withAnimation(.snappy) { KeywordLinker.append(word, to: &note) }
     }
 
     private func toggleRecording() {
@@ -151,18 +156,15 @@ struct QuickDreamCaptureView: View {
 
     private func save() {
         let content = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        let keywords = selectedKeywords.sorted()
-        let recordedContent = content.isEmpty ? "快速记录：" + keywords.joined(separator: "、") : content
-        let dreamDate = Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? .now
-        let title = content.isEmpty ? "刚醒来的梦" : String(content.prefix(12))
-
-        store.upsert(DreamEntry(
-            dreamDate: dreamDate,
+        var dream = DreamEntry(
+            dreamDate: Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? .now,
             recordedAt: .now,
-            title: title,
-            content: recordedContent,
-            tags: keywords
-        ))
+            title: TagParser.autoTitle(from: content),
+            content: content
+        )
+        // 提到的关键词同时记为标签，梦境列表里可以按它筛选
+        dream.tags = store.keywords(in: dream).map(\.name)
+        store.upsert(dream)
         dismiss()
     }
 }
@@ -174,7 +176,7 @@ private final class SpeechRecorder: NSObject, ObservableObject {
     @Published var errorMessage: String?
 
     private let audioEngine = AVAudioEngine()
-    private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
+    private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
 
@@ -182,13 +184,13 @@ private final class SpeechRecorder: NSObject, ObservableObject {
         errorMessage = nil
         AVAudioSession.sharedInstance().requestRecordPermission { [weak self] microphoneGranted in
             guard microphoneGranted else {
-                DispatchQueue.main.async { self?.errorMessage = "请允许麦克风权限后再试。" }
+                DispatchQueue.main.async { self?.errorMessage = "Allow microphone access, then try again." }
                 return
             }
             SFSpeechRecognizer.requestAuthorization { [weak self] status in
                 DispatchQueue.main.async {
                     guard status == .authorized else {
-                        self?.errorMessage = "请允许语音识别权限后再试。"
+                        self?.errorMessage = "Allow speech recognition, then try again."
                         return
                     }
                     self?.beginRecording()
@@ -210,7 +212,7 @@ private final class SpeechRecorder: NSObject, ObservableObject {
 
     private func beginRecording() {
         guard let recognizer, recognizer.isAvailable else {
-            errorMessage = "语音识别暂时不可用，请直接输入。"
+            errorMessage = "Speech recognition isn't available right now. Type instead."
             return
         }
 
@@ -240,7 +242,7 @@ private final class SpeechRecorder: NSObject, ObservableObject {
             try audioEngine.start()
             isRecording = true
         } catch {
-            errorMessage = "无法开始录音，请直接输入。"
+            errorMessage = "Couldn't start recording. Type instead."
             stopRecording()
         }
     }

@@ -45,7 +45,8 @@
 
 ## 数据模型
 - DayEntry { id, date, title, content, mood(happy/calm/neutral/stressed/sad), tags }
-- DreamEntry { id, dreamDate, recordedAt, title, content, emotions, vividness 1-5, isLucid, tags, analysis: DreamAnalysis? }
+- DreamEntry { id, dreamDate, recordedAt, title, content, emotions, isLucid, tags, analysis: DreamAnalysis? }
+- Keyword { id, name, kind(person/imagery/scene), subtitle, note, aliases }：正文出现名字或别名即自动链接
 - DreamAnalysis { summary, themes, symbols[{symbol, interpretation}], relatedDays[{entryId, date, snippet, reason}],
   relatedDreams[...], emotionalTone, suggestion, generatedAt, source(mock/gemini), model }
 

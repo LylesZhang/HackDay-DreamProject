@@ -18,7 +18,7 @@ struct DreamCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 6 : 10) {
             HStack(alignment: .firstTextBaseline) {
-                Label(compact ? entry.dreamDate.shortDay : entry.dreamDate.dayTitle + " · 夜", systemImage: moonIcon)
+                Label(compact ? entry.dreamDate.shortDay : entry.dreamDate.dayTitle + " · Night", systemImage: moonIcon)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(NightPalette.accent)
                 Spacer(minLength: 4)
@@ -35,13 +35,11 @@ struct DreamCardView: View {
             if !compact {
                 HStack(spacing: 6) {
                     ForEach(entry.emotions.prefix(3), id: \.self) { TagChip(text: $0, isNight: true) }
-                    if entry.isLucid { TagChip(text: "清醒梦", isNight: true) }
-                    Spacer(minLength: 0)
-                    VividnessStars(value: entry.vividness)
+                    if entry.isLucid { TagChip(text: "Lucid", isNight: true) }
                 }
             } else {
                 Spacer(minLength: 0)
-                VividnessStars(value: entry.vividness)
+                if let emotion = entry.emotions.first { TagChip(text: emotion, isNight: true) }
             }
         }
         .padding(compact ? 12 : 16)
@@ -49,7 +47,7 @@ struct DreamCardView: View {
         .journalCard(.night)
         .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityHint("查看梦境详情")
+        .accessibilityHint("Opens this dream")
     }
 
     @ViewBuilder
@@ -58,32 +56,14 @@ struct DreamCardView: View {
             Image(systemName: "sparkles")
                 .font(.caption)
                 .foregroundStyle(NightPalette.accent)
-                .accessibilityLabel("已分析")
+                .accessibilityLabel("Analyzed")
         } else {
-            Label("已分析", systemImage: "sparkles")
+            Label("Analyzed", systemImage: "sparkles")
                 .font(.caption2.weight(.semibold))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(NightPalette.chip, in: Capsule())
                 .foregroundStyle(NightPalette.text)
         }
-    }
-}
-
-/// 梦境清晰度（1–5 颗星）
-struct VividnessStars: View {
-    let value: Int
-
-    var body: some View {
-        HStack(spacing: 1) {
-            ForEach(1...5, id: \.self) { i in
-                Image(systemName: i <= value ? "star.fill" : "star")
-            }
-        }
-        .font(.caption2)
-        .imageScale(.small)
-        .foregroundStyle(NightPalette.accent)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("清晰度 \(value) 星，共 5 星")
     }
 }

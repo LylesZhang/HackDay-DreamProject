@@ -28,7 +28,7 @@ targets:
     info:
       path: DreamJournal/Resources/Info.plist
       properties:
-        CFBundleDisplayName: 昼夜日记
+        CFBundleDisplayName: Day & Night
         CFBundleDevelopmentRegion: zh-Hans
         UILaunchScreen: {}
         UIApplicationSceneManifest:
@@ -37,8 +37,8 @@ targets:
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
           NSAllowsArbitraryLoads: true
-        NSMicrophoneUsageDescription: 用于将你刚醒来时说出的梦境转写为记录。
-        NSSpeechRecognitionUsageDescription: 用于将你的梦境语音转写为文字。
+        NSMicrophoneUsageDescription: Used to transcribe the dream you describe right after waking up.
+        NSSpeechRecognitionUsageDescription: Used to turn your spoken dream into text.
         CFBundleURLTypes:
           - CFBundleURLSchemes: [dreamjournal]
     dependencies:

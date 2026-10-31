@@ -39,7 +39,6 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
       "dreamDate": "2026-10-28T15:00:00Z",
       "recordedAt": "2026-10-29T01:00:00Z",
       "emotions": ["恐惧", "兴奋"],
-      "vividness": 5,
       "isLucid": false,
       "tags": ["坠落", "飞", "工作"]
     }
@@ -52,7 +51,6 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
 | `days[].mood` | `happy` / `calm` / `neutral` / `stressed` / `sad` |
 | `dreams[].dreamDate` | 做梦的**那一晚**，和同一天的白天日记配对 |
 | `dreams[].recordedAt` | 实际记录的时间（通常是第二天早上） |
-| `dreams[].vividness` | 清晰度，1–5 |
 
 ### Response `200`
 ```json
@@ -75,7 +73,6 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
     "dreamDate": "2026-10-28T15:00:00Z",
     "recordedAt": "2026-10-29T01:00:00Z",
     "emotions": ["恐惧", "兴奋"],
-    "vividness": 5,
     "isLucid": false,
     "tags": ["坠落", "飞", "工作"]
   },
@@ -126,6 +123,42 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
 | `emotionalTone` / `suggestion` | ✅ | 字符串 |
 | `model` | 可选 | 显示在报告底部 |
 
+## 3. `POST /api/v1/keywords/suggest`
+
+从最近 3 天的梦里提炼关键词。App 在梦境有变化时于后台调用，结果在下次“快速记梦”时弹出，用户点一下即可写进记录。
+调用失败时 App 会静默退回本地提炼，不打扰用户。
+
+### Request
+```json
+{
+  "userId": "8C1F...",
+  "dreams": [ /* 最近 3 天的 DreamEntry，结构同上 */ ],
+  "existingKeywords": [
+    { "name": "奶奶", "kind": "person", "aliases": ["外婆"] }
+  ],
+  "options": { "language": "zh", "maxSuggestions": 6 }
+}
+```
+
+| 字段 | 说明 |
+|---|---|
+| `existingKeywords[].kind` | `person`（人物）/ `imagery`（意象）/ `scene`（人生阶段或场景） |
+| `options.maxSuggestions` | 1–12，默认 6 |
+
+### Response `200`
+```json
+{
+  "suggestions": [
+    { "name": "鲸鱼", "kind": "imagery", "reason": "出现在「和鲸鱼一起飞」和「被水淹没的城市」" }
+  ],
+  "model": "gemini-3.5-flash-lite",
+  "generatedAt": "2026-10-31T08:00:00Z"
+}
+```
+
+后端会去掉空名字和重复项，截断到 `maxSuggestions`；与已有关键词（名字或别名）同名的，统一成已有关键词的名字和类型。
+`dreams` 为空时直接返回空列表，不调用模型。错误格式同下。
+
 ### 错误响应（任何非 2xx 状态码）
 ```json
 { "error": { "code": "GEMINI_TIMEOUT", "message": "模型响应超时，请稍后再试" } }
@@ -167,7 +200,7 @@ iOS 前端 ↔ 团队后端（后端负责检索相关日记并调用 Gemini）�
 ### Prompt 骨架（后端用）
 ```
 你是一位温和的梦境分析师，擅长把梦和做梦者最近的现实经历联系起来。
-【今晚的梦】{date} {title}：{content}（情绪：{emotions}，清晰度 {vividness}/5，清醒梦：{isLucid}）
+【今晚的梦】{date} {title}：{content}（情绪：{emotions}，清醒梦：{isLucid}）
 【候选白天日记】
 - id={id} 日期={date} 心情={mood} 标题={title} 内容={content}
 【候选过往梦境】

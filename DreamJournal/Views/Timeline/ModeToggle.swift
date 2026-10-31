@@ -41,7 +41,7 @@ struct ModeToggle: View {
         .environment(\.colorScheme, .dark)
         .sensoryFeedback(.selection, trigger: mode)
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("时间轴模式")
+        .accessibilityLabel("Timeline mode")
     }
 
     private func foreground(for m: TimelineMode) -> Color {

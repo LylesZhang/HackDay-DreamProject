@@ -138,10 +138,74 @@ def test_prompt_and_schema_use_candidate_ids():
     days, dreams = _models(DAYS, DREAMS)
     dream = DreamEntry(**DREAM_BY_TITLE["从高楼坠落"])
     day_c, dream_c = find_candidates(dream, days, dreams, lookback_days=7, max_days=5, max_dreams=3)
-    prompt = llm.build_prompt(dream, day_c, dream_c, "zh")
-    assert "第一轮面试" in prompt and "简体中文" in prompt
+    prompt = llm.build_prompt(dream, day_c, dream_c, "en")
+    assert "第一轮面试" in prompt and "Write everything in English" in prompt
     schema = llm.response_schema([c.id for c in day_c], [])
     assert schema["properties"]["relatedDays"]["items"]["properties"]["entryId"]["enum"] == [c.id for c in day_c]
     # SDK 能接受这个 schema
     from google.genai import types
     types.GenerateContentConfig(response_mime_type="application/json", response_schema=schema)
+
+
+# ---------------------------------------------------------------- 关键词提炼
+
+def _suggest_body(dreams=None, existing=None):
+    return {"userId": "test-user", "dreams": DREAMS[-3:] if dreams is None else dreams,
+            "existingKeywords": existing or [], "options": {"language": "en", "maxSuggestions": 3}}
+
+
+def test_suggest_keywords_cleans_model_output(client, monkeypatch):
+    seen = {}
+
+    async def fake(dreams, existing, language, max_n):
+        seen["dreams"], seen["max_n"] = dreams, max_n
+        return {"suggestions": [
+            {"name": "#鲸鱼", "kind": "imagery", "reason": "出现在两个梦里"},
+            {"name": "外婆", "kind": "imagery", "reason": ""},          # 已有关键词的别名
+            {"name": "鲸鱼", "kind": "imagery", "reason": "重复"},
+            {"name": "", "kind": "scene", "reason": "空名字"},
+            {"name": "陌生城市", "kind": "weird", "reason": "未知类型"},
+            {"name": "多余的一个", "kind": "scene", "reason": "超出上限"},
+        ]}
+
+    monkeypatch.setattr(llm, "suggest_keywords", fake)
+    existing = [{"name": "奶奶", "kind": "person", "aliases": ["外婆"]}]
+    r = client.post("/api/v1/keywords/suggest", json=_suggest_body(existing=existing))
+    assert r.status_code == 200
+    body = r.json()
+    assert ISO_Z.match(body["generatedAt"])
+    assert [(s["name"], s["kind"]) for s in body["suggestions"]] == [
+        ("鲸鱼", "imagery"), ("奶奶", "person"), ("陌生城市", "imagery")]
+    assert body["suggestions"][1]["reason"] == "Showed up in your recent dreams"
+    assert len(seen["dreams"]) == 3 and seen["max_n"] == 3
+
+
+def test_suggest_keywords_without_dreams_skips_model(client, monkeypatch):
+    async def boom(*_):
+        raise AssertionError("不应调用模型")
+
+    monkeypatch.setattr(llm, "suggest_keywords", boom)
+    r = client.post("/api/v1/keywords/suggest", json=_suggest_body(dreams=[]))
+    assert r.status_code == 200 and r.json()["suggestions"] == []
+
+
+def test_keyword_prompt_mentions_existing_keywords():
+    from app.schemas import KeywordIn
+
+    dreams = [DreamEntry(**d) for d in DREAMS[-2:]]
+    prompt = llm.build_keyword_prompt(dreams, [KeywordIn(name="Grandma", kind="person", aliases=["Nana"])], "en", 5)
+    assert "Grandma (person, aliases: Nana)" in prompt
+    assert "at most 5 keywords" in prompt
+    assert all(d.title in prompt for d in dreams)
+
+
+def test_retrieval_matches_english_entries():
+    day = DayEntry(id="D-EN", date="2026-10-28T13:00:00Z", title="First-round interview", mood="stressed",
+                   tags=["interview", "work"], content="They asked a system design question and my palms were sweating.")
+    other = DayEntry(id="D-EN2", date="2026-10-28T13:00:00Z", title="Beach day", mood="happy",
+                     tags=["beach"], content="Watched the sunset with my roommate.")
+    dream = DreamEntry(id="E-EN", dreamDate="2026-10-28T15:00:00Z", title="Falling from a tower",
+                       tags=["falling", "work"], content="I was at work on the roof when I slipped. My palms were sweating.")
+    day_c, _ = find_candidates(dream, [other, day], [], lookback_days=7, max_days=5, max_dreams=3)
+    assert day_c[0].entry.title == "First-round interview"
+    assert "work" in day_c[0].clues and "palms" in day_c[0].clues

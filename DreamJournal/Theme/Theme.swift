@@ -7,9 +7,9 @@ enum TimelineMode: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .day: "日间"
-        case .night: "夜间"
-        case .dual: "昼夜"
+        case .day: "Day"
+        case .night: "Night"
+        case .dual: "Both"
         }
     }
 
@@ -77,11 +77,12 @@ enum DuskPalette {
 }
 
 extension Date {
-    private static let zh = Locale(identifier: "zh_CN")
-    /// 10月31日 周六
-    var dayTitle: String { formatted(.dateTime.month().day().weekday(.abbreviated).locale(Self.zh)) }
+    /// App 全部使用英文，不随系统语言变化
+    static let appLocale = Locale(identifier: "en_US")
+    /// Sat, Oct 31
+    var dayTitle: String { formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day().locale(Self.appLocale)) }
     /// 10/31
-    var shortDay: String { formatted(.dateTime.month(.defaultDigits).day().locale(Locale(identifier: "en_US"))) }
+    var shortDay: String { formatted(.dateTime.month(.defaultDigits).day().locale(Self.appLocale)) }
 }
 
 /// 标签胶囊
@@ -97,7 +98,7 @@ struct TagChip: View {
             .padding(.vertical, 3)
             .background(isNight ? NightPalette.chip : DayPalette.chip, in: Capsule())
             .foregroundStyle(isNight ? NightPalette.text : DayPalette.text)
-            .accessibilityLabel("标签 \(text)")
+            .accessibilityLabel("Tag \(text)")
     }
 }
 

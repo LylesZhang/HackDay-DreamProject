@@ -48,7 +48,7 @@ struct PlaceholderCard: View {
             Image(systemName: isNight ? "moon.zzz" : "sun.haze")
                 .font(.title2)
                 .symbolRenderingMode(.hierarchical)
-            Text(isNight ? "记录今晚的梦" : "记录这一天")
+            Text(isNight ? "Log the dream" : "Log the day")
                 .font(.caption.weight(.semibold))
             Image(systemName: "plus.circle.fill")
                 .font(.callout)
@@ -67,6 +67,6 @@ struct PlaceholderCard: View {
         )
         .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(isNight ? "记录这一晚的梦" : "记录这一天")
+        .accessibilityLabel(isNight ? "Log this night's dream" : "Log this day")
     }
 }

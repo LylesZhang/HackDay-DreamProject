@@ -22,6 +22,7 @@ struct DreamDetailView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
                         dreamBody(dream)
+                        linkedKeywords(dream)
                         analyzeSection(dream)
                     }
                     .padding(16)
@@ -29,18 +30,18 @@ struct DreamDetailView: View {
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
-                            Button("编辑", systemImage: "pencil") { editing = true }
-                            Button("删除", systemImage: "trash", role: .destructive) { confirmDelete = true }
-                        } label: { Label("更多", systemImage: "ellipsis.circle") }
+                            Button("Edit", systemImage: "pencil") { editing = true }
+                            Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                        } label: { Label("More", systemImage: "ellipsis.circle") }
                     }
                 }
                 .sheet(isPresented: $editing) { DreamComposeView(existing: dream) }
-                .confirmationDialog("删除这个梦？", isPresented: $confirmDelete, titleVisibility: .visible) {
-                    Button("删除", role: .destructive) {
+                .confirmationDialog("Delete this dream?", isPresented: $confirmDelete, titleVisibility: .visible) {
+                    Button("Delete", role: .destructive) {
                         dismiss()
                         store.deleteDream(id: dreamID)
                     }
-                } message: { Text("它的 AI 分析报告也会一起删除，且无法恢复") }
+                } message: { Text("Its AI report will be deleted too. This can't be undone.") }
                 .onAppear {
                     if DemoLaunch.autoAnalyze, dream.analysis == nil, !isAnalyzing { analyze(dream, using: AnalysisServiceFactory.current()) }
                 }
@@ -53,11 +54,11 @@ struct DreamDetailView: View {
         .tint(NightPalette.accent)
         .sensoryFeedback(.success, trigger: analysisDone)
         .sensoryFeedback(.error, trigger: errorMessage) { _, new in new != nil }
-        .alert("分析失败", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
-            Button("改用 Mock 重试") {
+        .alert("Analysis failed", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("Retry with Mock") {
                 if let dream = store.dream(id: dreamID) { analyze(dream, using: MockAnalysisService()) }
             }
-            Button("取消", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
         }
@@ -66,22 +67,31 @@ struct DreamDetailView: View {
     private func dreamBody(_ dream: DreamEntry) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Label(dream.dreamDate.dayTitle + " · 夜", systemImage: "moon.stars.fill")
+                Label(dream.dreamDate.dayTitle + " · Night", systemImage: "moon.stars.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(NightPalette.accent)
                 Spacer()
-                VividnessStars(value: dream.vividness)
+                if dream.isLucid {
+                    Label("Lucid", systemImage: "eye")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(NightPalette.accent)
+                }
             }
             Text(dream.title)
                 .font(.title.weight(.bold))
                 .foregroundStyle(NightPalette.text)
-            Text(dream.content)
+            // 正文里的关键词是可点击的链接（类似 Obsidian 双链），点开进入关键词档案
+            Text(KeywordLinker.attributed(dream.content, keywords: store.keywords))
                 .font(.body)
                 .lineSpacing(6)
                 .foregroundStyle(NightPalette.text.opacity(0.9))
+                .environment(\.openURL, OpenURLAction { url in
+                    guard let id = KeywordLinker.keywordID(from: url) else { return .systemAction }
+                    path.append(.keyword(id))
+                    return .handled
+                })
             FlowLayout {
                 ForEach(dream.emotions, id: \.self) { TagChip(text: $0, isNight: true) }
-                if dream.isLucid { TagChip(text: "清醒梦", isNight: true) }
             }
             if !dream.tags.isEmpty {
                 FlowLayout { ForEach(dream.tags, id: \.self) { TagChip(text: $0, isNight: true) } }
@@ -92,16 +102,40 @@ struct DreamDetailView: View {
         .journalCard(.night, radius: 24)
     }
 
+    /// 这个梦链接到的关键词
+    @ViewBuilder
+    private func linkedKeywords(_ dream: DreamEntry) -> some View {
+        let linked = store.keywords(in: dream)
+        if !linked.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                Label("Linked keywords", systemImage: "link")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(NightPalette.secondaryText)
+                    .accessibilityAddTraits(.isHeader)
+                FlowLayout(spacing: 8, lineSpacing: 8) {
+                    ForEach(linked) { keyword in
+                        NavigationLink(value: Route.keyword(keyword.id)) {
+                            KeywordChip(name: keyword.name, kind: keyword.kind)
+                        }
+                        .buttonStyle(PressableCardStyle())
+                        .accessibilityHint("Opens the keyword profile")
+                    }
+                }
+            }
+            .padding(.horizontal, 4)
+        }
+    }
+
     @ViewBuilder
     private func analyzeSection(_ dream: DreamEntry) -> some View {
         if dream.analysis != nil {
             Button { path.append(.report(dream.id)) } label: {
-                Label("查看 AI 联合分析报告", systemImage: "sparkles")
+                Label("View AI Dream Report", systemImage: "sparkles")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(GlowButtonStyle())
             Button { analyze(dream, using: AnalysisServiceFactory.current()) } label: {
-                Label("重新生成分析", systemImage: "arrow.clockwise")
+                Label("Regenerate analysis", systemImage: "arrow.clockwise")
                     .font(.footnote)
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
@@ -109,11 +143,11 @@ struct DreamDetailView: View {
         } else {
             VStack(spacing: 8) {
                 Button { analyze(dream, using: AnalysisServiceFactory.current()) } label: {
-                    Label("生成 AI 联合分析", systemImage: "sparkles")
+                    Label("Analyze with AI", systemImage: "sparkles")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(GlowButtonStyle())
-                Text("AI 会结合这个梦之前的白天日记和过往梦境一起分析")
+                Text("AI reads this dream alongside the days before it and your past dreams.")
                     .font(.caption)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(NightPalette.secondaryText)
@@ -160,7 +194,7 @@ struct AnalyzingOverlay: View {
     @State private var spin = false
     @State private var step = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    private let messages = ["正在检索梦前几天的白天日记…", "正在寻找相似的过往梦境…", "正在连接你的白天与梦境…"]
+    private let messages = ["Reading the days before this dream…", "Looking for similar past dreams…", "Connecting your days and dreams…"]
     private let timer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
 
     var body: some View {

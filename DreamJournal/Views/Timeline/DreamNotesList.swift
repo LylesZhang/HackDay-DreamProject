@@ -18,9 +18,9 @@ struct DreamNotesList: View {
 
             if store.dreamEntries.isEmpty {
                 ContentUnavailableView {
-                    Label("还没有梦境记录", systemImage: "moon.zzz").foregroundStyle(NightPalette.text)
+                    Label("No dreams yet", systemImage: "moon.zzz").foregroundStyle(NightPalette.text)
                 } description: {
-                    Text("醒来后第一时间记下来吧").foregroundStyle(NightPalette.secondaryText)
+                    Text("Write one down as soon as you wake up.").foregroundStyle(NightPalette.secondaryText)
                 }
                 .padding(.top, 40)
             } else {
@@ -33,11 +33,11 @@ struct DreamNotesList: View {
             }
         }
         .sensoryFeedback(.selection, trigger: selectedTag)
-        .confirmationDialog("删除这个梦？", isPresented: Binding(get: { pendingDelete != nil },
+        .confirmationDialog("Delete this dream?", isPresented: Binding(get: { pendingDelete != nil },
                                                              set: { if !$0 { pendingDelete = nil } }),
                             titleVisibility: .visible, presenting: pendingDelete) { dream in
-            Button("删除", role: .destructive) { store.deleteDream(id: dream.id) }
-        } message: { _ in Text("它的 AI 分析报告也会一起删除，且无法恢复") }
+            Button("Delete", role: .destructive) { store.deleteDream(id: dream.id) }
+        } message: { _ in Text("Its AI report will be deleted too. This can't be undone.") }
     }
 
     // MARK: - 标签栏
@@ -52,7 +52,7 @@ struct DreamNotesList: View {
     private var tagBar: some View {
         ScrollView(.horizontal) {
             HStack(spacing: 8) {
-                tagButton(title: "全部", count: store.dreamEntries.count, isOn: selectedTag == nil) { selectedTag = nil }
+                tagButton(title: "All", count: store.dreamEntries.count, isOn: selectedTag == nil) { selectedTag = nil }
                 ForEach(tagCounts, id: \.tag) { item in
                     tagButton(title: "#\(item.tag)", count: item.count, isOn: selectedTag == item.tag) {
                         selectedTag = selectedTag == item.tag ? nil : item.tag
@@ -64,7 +64,7 @@ struct DreamNotesList: View {
         .scrollIndicators(.hidden)
         .padding(.horizontal, -16)   // 让标签栏横向贯穿屏幕边缘
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("按标签筛选")
+        .accessibilityLabel("Filter by tag")
     }
 
     private func tagButton(title: String, count: Int, isOn: Bool, action: @escaping () -> Void) -> some View {
@@ -80,7 +80,7 @@ struct DreamNotesList: View {
             .foregroundStyle(isOn ? NightPalette.ink : NightPalette.text)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(title)，\(count) 个梦")
+        .accessibilityLabel("\(title), \(count) \(count == 1 ? "dream" : "dreams")")
         .accessibilityAddTraits(isOn ? .isSelected : [])
     }
 
@@ -101,7 +101,7 @@ struct DreamNotesList: View {
                     }
                     .buttonStyle(NoteRowButtonStyle())
                     .contextMenu {
-                        Button("删除", systemImage: "trash", role: .destructive) { pendingDelete = dream }
+                        Button("Delete", systemImage: "trash", role: .destructive) { pendingDelete = dream }
                     }
                     if index < section.entries.count - 1 {
                         Rectangle()
@@ -118,7 +118,7 @@ struct DreamNotesList: View {
 }
 
 /// 备忘录风格的一行：标题 / 日期 + 摘要 / 标签
-private struct DreamNoteRow: View {
+struct DreamNoteRow: View {
     let dream: DreamEntry
     let dateLabel: String
 
@@ -147,8 +147,8 @@ private struct DreamNoteRow: View {
             }
             Spacer(minLength: 0)
             HStack(spacing: 6) {
-                if dream.isLucid { Image(systemName: "eye").accessibilityLabel("清醒梦") }
-                if dream.analysis != nil { Image(systemName: "sparkles").accessibilityLabel("已分析") }
+                if dream.isLucid { Image(systemName: "eye").accessibilityLabel("Lucid") }
+                if dream.analysis != nil { Image(systemName: "sparkles").accessibilityLabel("Analyzed") }
             }
             .font(.footnote)
             .foregroundStyle(NightPalette.accent)
@@ -168,7 +168,7 @@ private struct TightLabelStyle: LabelStyle {
 }
 
 /// 列表行的按压高亮（模拟系统 List 的点按效果）
-private struct NoteRowButtonStyle: ButtonStyle {
+struct NoteRowButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background(Color.white.opacity(configuration.isPressed ? 0.08 : 0))
@@ -187,9 +187,9 @@ struct DreamSection: Identifiable {
     /// 行内的日期：今天 / 昨天显示记录时间，一周内显示星期，更早显示日期
     func rowLabel(for dream: DreamEntry) -> String {
         switch kind {
-        case .today, .yesterday: dream.recordedAt.formatted(date: .omitted, time: .shortened)
-        case .week: dream.dreamDate.formatted(.dateTime.weekday(.wide))
-        default: dream.dreamDate.formatted(.dateTime.month(.defaultDigits).day())
+        case .today, .yesterday: dream.recordedAt.formatted(.dateTime.hour().minute().locale(Date.appLocale))
+        case .week: dream.dreamDate.formatted(.dateTime.weekday(.wide).locale(Date.appLocale))
+        default: dream.dreamDate.shortDay
         }
     }
 
@@ -200,15 +200,15 @@ struct DreamSection: Identifiable {
             let day = cal.startOfDay(for: dream.dreamDate)
             let ago = cal.dateComponents([.day], from: day, to: today).day ?? 0
             let (id, title, kind): (String, String, Kind) = switch ago {
-            case ..<1: ("today", "今天", .today)
-            case 1: ("yesterday", "昨天", .yesterday)
-            case 2..<7: ("week", "过去 7 天", .week)
-            case 7..<30: ("month", "过去 30 天", .month)
+            case ..<1: ("today", "Today", .today)
+            case 1: ("yesterday", "Yesterday", .yesterday)
+            case 2..<7: ("week", "Previous 7 Days", .week)
+            case 7..<30: ("month", "Previous 30 Days", .month)
             default:
                 if cal.isDate(dream.dreamDate, equalTo: now, toGranularity: .year) {
-                    ("m-\(cal.component(.month, from: day))", day.formatted(.dateTime.month(.wide)), .calendarMonth)
+                    ("m-\(cal.component(.month, from: day))", day.formatted(.dateTime.month(.wide).locale(Date.appLocale)), .calendarMonth)
                 } else {
-                    ("y-\(cal.component(.year, from: day))", "\(cal.component(.year, from: day)) 年", .year)
+                    ("y-\(cal.component(.year, from: day))", "\(cal.component(.year, from: day))", .year)
                 }
             }
             // 已按日期倒序，同组条目必然相邻

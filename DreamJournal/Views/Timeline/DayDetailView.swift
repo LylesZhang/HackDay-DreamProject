@@ -37,7 +37,7 @@ struct DayDetailView: View {
                             FlowLayout { ForEach(entry.tags, id: \.self) { TagChip(text: $0, isNight: false) } }
                         }
                         if let dream = sameNightDream(for: entry) {
-                            Label("当晚的梦", systemImage: "moon.stars.fill")
+                            Label("That night's dream", systemImage: "moon.stars.fill")
                                 .font(.headline)
                                 .foregroundStyle(DayPalette.text)
                                 .padding(.top, 12)
@@ -54,18 +54,18 @@ struct DayDetailView: View {
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
-                            Button("编辑", systemImage: "pencil") { editing = true }
-                            Button("删除", systemImage: "trash", role: .destructive) { confirmDelete = true }
-                        } label: { Label("更多", systemImage: "ellipsis.circle") }
+                            Button("Edit", systemImage: "pencil") { editing = true }
+                            Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                        } label: { Label("More", systemImage: "ellipsis.circle") }
                     }
                 }
                 .sheet(isPresented: $editing) { DayComposeView(existing: entry) }
-                .confirmationDialog("删除这篇日记？", isPresented: $confirmDelete, titleVisibility: .visible) {
-                    Button("删除", role: .destructive) {
+                .confirmationDialog("Delete this entry?", isPresented: $confirmDelete, titleVisibility: .visible) {
+                    Button("Delete", role: .destructive) {
                         dismiss()
                         store.deleteDay(id: entryID)
                     }
-                } message: { Text("删除后无法恢复") }
+                } message: { Text("This can't be undone.") }
             }
         }
         .navigationBarTitleDisplayMode(.inline)

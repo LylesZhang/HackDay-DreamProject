@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D332597D3D9597389D8AC3B0 /* KeywordProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0BA2F10D0C4A2FB1E213D4 /* KeywordProfileView.swift */; };
+		EDC61D0A80ACB88264871C0B /* KeywordLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76F4BAE9059F7F238D88573E /* KeywordLibraryView.swift */; };
+		0F451EB2526B160F03857191 /* KeywordEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96BC435B3DAC7001CEB0AC5 /* KeywordEditView.swift */; };
+		E498B74FF178CA526D12E241 /* KeywordComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F4227B326B4D64CF89E2E5 /* KeywordComponents.swift */; };
+		88D16B8640FC013905373901 /* KeywordExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4BB7AC39B1576F2D127E48 /* KeywordExtractor.swift */; };
+		C5ECE21BCE4022FEE4C48344 /* Keyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CECCD71A4B358D8C411DCB /* Keyword.swift */; };
 		17BB79E1E6B4F8A10439A43D /* DayComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CB43C57ABD1DDFA13099D2 /* DayComposeView.swift */; };
 		1B8285125118D31B92FFF3A4 /* DreamComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AAF84C5C1121BCA002C37 /* DreamComposeView.swift */; };
 		2C2526B914975D4F93F2857D /* DayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91552502FF37E70731AF7F /* DayCardView.swift */; };
@@ -63,6 +69,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3E0BA2F10D0C4A2FB1E213D4 /* KeywordProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordProfileView.swift; sourceTree = "<group>"; };
+		76F4BAE9059F7F238D88573E /* KeywordLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordLibraryView.swift; sourceTree = "<group>"; };
+		C96BC435B3DAC7001CEB0AC5 /* KeywordEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordEditView.swift; sourceTree = "<group>"; };
+		30F4227B326B4D64CF89E2E5 /* KeywordComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordComponents.swift; sourceTree = "<group>"; };
+		ED4BB7AC39B1576F2D127E48 /* KeywordExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordExtractor.swift; sourceTree = "<group>"; };
+		E1CECCD71A4B358D8C411DCB /* Keyword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyword.swift; sourceTree = "<group>"; };
 		075509FD55EDA3A9DA265223 /* DreamDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamDetailView.swift; sourceTree = "<group>"; };
 		0D02031F1F52947BCDC2B1A8 /* ModeToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeToggle.swift; sourceTree = "<group>"; };
 		13A9031334A1504A60FD07C6 /* RemoteAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAnalysisService.swift; sourceTree = "<group>"; };
@@ -98,6 +110,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		9B5F080C7196BD816E554B58 /* Keywords */ = {
+			isa = PBXGroup;
+			children = (
+				3E0BA2F10D0C4A2FB1E213D4 /* KeywordProfileView.swift */,
+				76F4BAE9059F7F238D88573E /* KeywordLibraryView.swift */,
+				C96BC435B3DAC7001CEB0AC5 /* KeywordEditView.swift */,
+				30F4227B326B4D64CF89E2E5 /* KeywordComponents.swift */,
+			);
+			path = Keywords;
+			sourceTree = "<group>";
+		};
 		017A8BCF63AD9ACB4F971607 /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +150,7 @@
 		24FE92A76EF6D58D766072BF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9B5F080C7196BD816E554B58 /* Keywords */,
 				746A56D48F169FC9E9705618 /* Analysis */,
 				EDD2BF6086922075F3A27064 /* Compose */,
 				9DBBC95AD0AA1287C9E2F394 /* Settings */,
@@ -147,6 +171,7 @@
 		5E2E7D141E02A615BBB6CC79 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				ED4BB7AC39B1576F2D127E48 /* KeywordExtractor.swift */,
 				8537EFA3398891B7B8564D40 /* AnalysisService.swift */,
 				D3F3A470F6D043BA935049CE /* APIModels.swift */,
 				616E2579A5A85FB1CC02FF3F /* MockAnalysisService.swift */,
@@ -231,6 +256,7 @@
 		DFD125D77EFB36F837E4EDB5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E1CECCD71A4B358D8C411DCB /* Keyword.swift */,
 				50D6005ADA277D79EB27DAB7 /* DayEntry.swift */,
 				51D5314F8BF970BA9A922B3F /* DreamAnalysis.swift */,
 				80BBB8A7B5DECA35D1BE76EF /* DreamEntry.swift */,
@@ -353,6 +379,12 @@
 				846BDB44574BC21CDEF70311 /* DreamAnalysis.swift in Sources */,
 				35C642415803D8E8AACAAC40 /* DreamCardView.swift in Sources */,
 				A1D0E5F1C0FFEE0000000001 /* DreamNotesList.swift in Sources */,
+				D332597D3D9597389D8AC3B0 /* KeywordProfileView.swift in Sources */,
+				EDC61D0A80ACB88264871C0B /* KeywordLibraryView.swift in Sources */,
+				0F451EB2526B160F03857191 /* KeywordEditView.swift in Sources */,
+				E498B74FF178CA526D12E241 /* KeywordComponents.swift in Sources */,
+				88D16B8640FC013905373901 /* KeywordExtractor.swift in Sources */,
+				C5ECE21BCE4022FEE4C48344 /* Keyword.swift in Sources */,
 				1B8285125118D31B92FFF3A4 /* DreamComposeView.swift in Sources */,
 				3988DFC99874B0F31A9AC795 /* DreamDetailView.swift in Sources */,
 				377A28ECB2987E09D30D1835 /* DreamEntry.swift in Sources */,

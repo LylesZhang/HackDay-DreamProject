@@ -8,8 +8,8 @@ struct DreamJournalWidget: Widget {
         StaticConfiguration(kind: kind, provider: DreamWidgetProvider()) { entry in
             DreamWidgetView(entry: entry)
         }
-        .configurationDisplayName("快速记梦")
-        .description("醒来时，立刻留住梦的片段。")
+        .configurationDisplayName("Quick Dream")
+        .description("Catch the pieces of a dream the moment you wake up.")
         // 锁屏：圆形 / 长条；主屏幕：小号 / 中号
         .supportedFamilies([.accessoryCircular, .accessoryRectangular, .systemSmall, .systemMedium])
     }
@@ -71,9 +71,9 @@ private struct DreamWidgetView: View {
                 Image(systemName: "mic.fill")
                     .font(.title2)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("快速记梦")
+                    Text("Quick Dream")
                         .font(.headline)
-                    Text("留住刚醒来的片段")
+                    Text("Catch it before it fades")
                         .font(.caption2)
                 }
             }
@@ -110,10 +110,10 @@ private struct DreamWidgetView: View {
                 .font(.title2)
                 .foregroundStyle(WidgetPalette.accent)
             Spacer(minLength: 0)
-            Text("快速记梦")
+            Text("Quick Dream")
                 .font(.headline)
                 .foregroundStyle(WidgetPalette.text)
-            Text(entry.isMorning ? "趁梦还记得" : "随时留住梦的片段")
+            Text(entry.isMorning ? "While you still remember" : "Catch a dream anytime")
                 .font(.caption2)
                 .foregroundStyle(WidgetPalette.secondaryText)
             micPill
@@ -125,14 +125,14 @@ private struct DreamWidgetView: View {
     private var mediumView: some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 6) {
-                Label(entry.isMorning ? "早安" : "昼夜日记", systemImage: entry.isMorning ? "sunrise.fill" : "moon.stars.fill")
+                Label(entry.isMorning ? "Good morning" : "Day & Night", systemImage: entry.isMorning ? "sunrise.fill" : "moon.stars.fill")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(entry.isMorning ? WidgetPalette.warm : WidgetPalette.accent)
                 Spacer(minLength: 0)
-                Text(entry.isMorning ? "昨晚梦见了什么？" : "刚刚梦见了什么？")
+                Text(entry.isMorning ? "What did you dream last night?" : "What did you just dream?")
                     .font(.headline)
                     .foregroundStyle(WidgetPalette.text)
-                Text("说一句、点几个关键词就好，细节晚些再整理。")
+                Text("A sentence or a few keywords is enough. Details can wait.")
                     .font(.caption2)
                     .foregroundStyle(WidgetPalette.secondaryText)
                     .lineLimit(2)
@@ -146,7 +146,7 @@ private struct DreamWidgetView: View {
                     .frame(width: 56, height: 56)
                     .background(WidgetPalette.accent, in: Circle())
                     .shadow(color: WidgetPalette.accent.opacity(0.6), radius: 8)
-                Text("说一说")
+                Text("Speak")
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(WidgetPalette.text)
             }
@@ -154,7 +154,7 @@ private struct DreamWidgetView: View {
     }
 
     private var micPill: some View {
-        Label("说一说", systemImage: "mic.fill")
+        Label("Speak", systemImage: "mic.fill")
             .font(.caption2.weight(.semibold))
             .foregroundStyle(Color(red: 0.106, green: 0.086, blue: 0.251))
             .padding(.horizontal, 10)

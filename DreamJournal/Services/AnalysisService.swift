@@ -6,12 +6,14 @@ protocol AnalysisService {
     func sync(days: [DayEntry], dreams: [DreamEntry]) async throws
     /// 分析一个梦：后端会检索时间上 / 内容上相关的白天日记和过往梦境，交给 LLM 生成报告。
     func analyze(dream: DreamEntry, store: JournalStore) async throws -> DreamAnalysis
+    /// 从最近几天的梦里提炼关键词，供下次速记时一键填写。
+    func suggestKeywords(recentDreams: [DreamEntry], existing: [Keyword]) async throws -> [KeywordSuggestion]
 }
 
 enum ServiceMode: String, CaseIterable, Identifiable {
     case mock, remote
     var id: String { rawValue }
-    var label: String { self == .mock ? "本地 Mock（离线演示）" : "后端（Gemini）" }
+    var label: String { self == .mock ? "Local mock (offline demo)" : "Backend (Gemini)" }
 }
 
 enum AppSettings {
@@ -52,9 +54,9 @@ enum AnalysisError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .invalidURL(let url): "后端地址无效：\(url)"
-        case .server(let code, let message): "后端返回错误（\(code)）：\(message)"
-        case .badStatus(let status): "后端返回 HTTP \(status)"
+        case .invalidURL(let url): "Invalid backend URL: \(url)"
+        case .server(let code, let message): "Backend error (\(code)): \(message)"
+        case .badStatus(let status): "Backend returned HTTP \(status)"
         }
     }
 }

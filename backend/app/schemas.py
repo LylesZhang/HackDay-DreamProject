@@ -38,7 +38,6 @@ class DreamEntry(BaseModel):
     dreamDate: datetime
     recordedAt: datetime | None = None
     emotions: list[str] = Field(default_factory=list)
-    vividness: int = Field(default=3, ge=1, le=5)
     isLucid: bool = False
     tags: list[str] = Field(default_factory=list)
 
@@ -63,7 +62,7 @@ class SyncResponse(BaseModel):
 class AnalyzeOptions(BaseModel):
     lookbackDays: int = Field(default=7, ge=0, le=60)
     maxRelated: int = Field(default=5, ge=0, le=10)
-    language: str = "zh"
+    language: str = "en"
 
 
 class AnalyzeRequest(BaseModel):
@@ -97,6 +96,45 @@ class AnalyzeResponse(BaseModel):
     relatedDreams: list[RelatedEntry]
     emotionalTone: str
     suggestion: str
+    model: str | None = None
+    generatedAt: datetime
+
+    @field_serializer("generatedAt")
+    def _ser_generated(self, v: datetime) -> str:
+        return iso_z(v)
+
+
+# ---------------------------------------------------------------- 关键词提炼
+
+KeywordKind = Literal["person", "imagery", "scene"]
+
+
+class KeywordIn(BaseModel):
+    name: str
+    kind: KeywordKind = "imagery"
+    aliases: list[str] = Field(default_factory=list)
+
+
+class KeywordSuggestOptions(BaseModel):
+    language: str = "en"
+    maxSuggestions: int = Field(default=6, ge=1, le=12)
+
+
+class KeywordSuggestRequest(BaseModel):
+    userId: str
+    dreams: list[DreamEntry] = Field(default_factory=list)
+    existingKeywords: list[KeywordIn] = Field(default_factory=list)
+    options: KeywordSuggestOptions = Field(default_factory=KeywordSuggestOptions)
+
+
+class KeywordSuggestion(BaseModel):
+    name: str
+    kind: KeywordKind
+    reason: str
+
+
+class KeywordSuggestResponse(BaseModel):
+    suggestions: list[KeywordSuggestion]
     model: str | None = None
     generatedAt: datetime
 

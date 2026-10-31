@@ -8,11 +8,9 @@ struct DreamEntry: Identifiable, Codable, Hashable {
     var title: String
     var content: String
     var emotions: [String] = []
-    /// 清晰度 1–5
-    var vividness: Int = 3
     var isLucid: Bool = false
     var tags: [String] = []
     var analysis: DreamAnalysis?
 
-    static let emotionOptions = ["不安", "愉快", "困惑", "恐惧", "怀念", "兴奋", "悲伤", "平静", "自由"]
+    static let emotionOptions = ["Uneasy", "Joyful", "Confused", "Afraid", "Nostalgic", "Excited", "Sad", "Peaceful", "Free"]
 }

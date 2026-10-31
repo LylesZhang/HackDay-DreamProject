@@ -1,6 +1,7 @@
-"""昼夜日记后端：POST /api/v1/entries/sync、POST /api/v1/dreams/analyze。接口约定见 docs/API.md。"""
+"""昼夜日记后端：POST /api/v1/entries/sync、/api/v1/dreams/analyze、/api/v1/keywords/suggest。接口约定见 docs/API.md。"""
 import logging
 import time
+from datetime import datetime, timezone
 
 from fastapi import BackgroundTasks, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -8,15 +9,18 @@ from fastapi.responses import JSONResponse
 
 from . import config, llm
 from .errors import AppError, error_body
-from .postprocess import build_response
+from .postprocess import build_response, clean_keyword_suggestions
 from .retrieval import cosine_map, entry_texts, find_candidates
-from .schemas import AnalyzeRequest, AnalyzeResponse, DayEntry, DreamEntry, SyncRequest, SyncResponse
+from .schemas import (
+    AnalyzeRequest, AnalyzeResponse, DayEntry, DreamEntry, KeywordSuggestRequest, KeywordSuggestResponse,
+    SyncRequest, SyncResponse,
+)
 from .store import Store
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("dreamjournal")
 
-app = FastAPI(title="昼夜日记 Backend", version="1.0")
+app = FastAPI(title="Day & Night Backend", version="1.0")
 store = Store(config.DB_PATH)
 
 
@@ -31,13 +35,13 @@ async def _app_error(_: Request, e: AppError):
 async def _validation_error(_: Request, e: RequestValidationError):
     first = e.errors()[0] if e.errors() else {}
     where = ".".join(str(x) for x in first.get("loc", []) if x != "body")
-    return JSONResponse(error_body("INVALID_REQUEST", f"请求格式不正确：{where} {first.get('msg', '')}".strip()), 400)
+    return JSONResponse(error_body("INVALID_REQUEST", f"Invalid request: {where} {first.get('msg', '')}".strip()), 400)
 
 
 @app.exception_handler(Exception)
 async def _unexpected(_: Request, e: Exception):
     log.exception("Unhandled error")
-    return JSONResponse(error_body("INTERNAL", "服务器内部错误，请稍后再试"), 500)
+    return JSONResponse(error_body("INTERNAL", "Internal server error. Please try again later."), 500)
 
 
 # ---------------------------------------------------------------- embedding
@@ -115,3 +119,17 @@ async def analyze(req: AnalyzeRequest):
         len(resp.relatedDays), len(resp.relatedDreams), sim is not None, time.perf_counter() - t0,
     )
     return resp
+
+
+@app.post("/api/v1/keywords/suggest", response_model=KeywordSuggestResponse)
+async def suggest_keywords(req: KeywordSuggestRequest):
+    """从最近几天的梦里提炼关键词，前端在下次速记时弹出供用户一键填写。"""
+    now = datetime.now(timezone.utc)
+    if not req.dreams:
+        return KeywordSuggestResponse(suggestions=[], model=None, generatedAt=now)
+    max_n = req.options.maxSuggestions
+    data = await llm.suggest_keywords(req.dreams, req.existingKeywords, req.options.language, max_n)
+    suggestions = clean_keyword_suggestions(data, req.existingKeywords, max_n)
+    log.info("suggest user=%s dreams=%d existing=%d -> %d", req.userId[:8], len(req.dreams),
+             len(req.existingKeywords), len(suggestions))
+    return KeywordSuggestResponse(suggestions=suggestions, model=config.GEMINI_MODEL, generatedAt=now)

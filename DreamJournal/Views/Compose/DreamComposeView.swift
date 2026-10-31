@@ -23,74 +23,60 @@ struct DreamComposeView: View {
                 StarfieldView(starCount: 60).ignoresSafeArea()
                 Form {
                     Section {
-                        DatePicker("做梦的那一晚", selection: $draft.dreamDate, displayedComponents: .date)
-                        TextField("给这个梦起个名字", text: $draft.title)
+                        DatePicker("Night of", selection: $draft.dreamDate, displayedComponents: .date)
+                        TextField("Give this dream a name", text: $draft.title)
                     }
                     .listRowBackground(FormRowBackground.night)
-                    Section("梦里发生了什么") {
+                    Section("What happened in the dream") {
                         TextEditor(text: $draft.content)
                             .frame(minHeight: 160)
                             .scrollContentBackground(.hidden)
                     }
                     .listRowBackground(FormRowBackground.night)
-                    Section("梦里的情绪") {
+                    Section {
+                        KeywordPicker(isUsed: { $0.isMentioned(in: draft.content) },
+                                      onPick: { keyword in
+                                          withAnimation(.snappy) { KeywordLinker.append(keyword.name, to: &draft.content) }
+                                      })
+                    } header: {
+                        Text("Tap a keyword to add it")
+                    }
+                    .listRowBackground(FormRowBackground.night)
+                    Section("Feelings in the dream") {
                         FlowChips(options: DreamEntry.emotionOptions, selection: $draft.emotions)
                     }
                     .listRowBackground(FormRowBackground.night)
                     Section {
-                        HStack {
-                            Text("清晰度")
-                            Spacer()
-                            ForEach(1...5, id: \.self) { i in
-                                Button { draft.vividness = i } label: {
-                                    Image(systemName: i <= draft.vividness ? "star.fill" : "star")
-                                        .foregroundStyle(NightPalette.accent)
-                                        .symbolEffect(.bounce, value: draft.vividness == i)
-                                        .frame(width: 30, height: 36)
-                                        .contentShape(Rectangle())
-                                }
-                                .buttonStyle(.borderless)
-                            }
-                        }
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("清晰度")
-                        .accessibilityValue("\(draft.vividness) 星，共 5 星")
-                        .accessibilityAdjustableAction { direction in
-                            switch direction {
-                            case .increment: draft.vividness = min(5, draft.vividness + 1)
-                            case .decrement: draft.vividness = max(1, draft.vividness - 1)
-                            @unknown default: break
-                            }
-                        }
-                        Toggle("这是一个清醒梦", isOn: $draft.isLucid)
+                        Toggle("This was a lucid dream", isOn: $draft.isLucid)
                     }
                     .listRowBackground(FormRowBackground.night)
-                    Section("标签（空格分隔）") {
-                        TextField("水 飞 迷路", text: $tagText)
+                    Section("Tags (space-separated)") {
+                        TextField("water flying lost", text: $tagText)
                     }
                     .listRowBackground(FormRowBackground.night)
                 }
                 .scrollContentBackground(.hidden)
             }
-            .navigationTitle(isEditing ? "编辑梦境" : "梦境日记")
+            .navigationTitle(isEditing ? "Edit Dream" : "Dream Entry")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("取消") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存", action: save)
+                    Button("Save", action: save)
                         .disabled(draft.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
         .tint(NightPalette.accent)
         .environment(\.colorScheme, .dark)
-        .sensoryFeedback(.selection, trigger: draft.vividness)
     }
 
     private func save() {
         draft.tags = TagParser.parse(tagText)
+        // 提到的关键词同时记为标签，梦境列表里可以按它筛选
+        for name in store.keywords(in: draft).map(\.name) where !draft.tags.contains(name) { draft.tags.append(name) }
         if draft.title.trimmingCharacters(in: .whitespaces).isEmpty {
-            draft.title = String(draft.content.prefix(12))
+            draft.title = TagParser.autoTitle(from: draft.content)
         }
         if !isEditing { draft.recordedAt = .now }
         store.upsert(draft)

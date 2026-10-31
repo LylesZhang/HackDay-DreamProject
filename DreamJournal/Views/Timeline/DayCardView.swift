@@ -35,6 +35,6 @@ struct DayCardView: View {
         .journalCard(.day)
         .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityHint("查看白天日记")
+        .accessibilityHint("Opens this day entry")
     }
 }

@@ -2,6 +2,7 @@
 
 候选会全部交给 Gemini，由模型挑出真正相关的；这里的打分只决定“给模型看哪些、按什么顺序看”。
 """
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -20,8 +21,41 @@ def _is_cjk(ch: str) -> bool:
     return 0x4E00 <= ord(ch) <= 0x9FFF
 
 
+_EN_STOP = {
+    "the", "and", "was", "were", "that", "this", "with", "for", "but", "had", "have", "has", "from", "into", "out",
+    "all", "just", "then", "when", "what", "there", "they", "them", "she", "her", "his", "him", "you", "your", "our",
+    "are", "not", "too", "very", "about", "after", "before", "still", "even", "felt", "feel", "like", "kept", "got",
+    "get", "its", "one", "some", "could", "would", "should", "can", "did", "didn", "couldn", "really", "much", "more",
+    "most", "over", "under", "down", "been", "being", "way", "back", "dream", "dreamed", "dreaming", "realized",
+    "suddenly", "started", "decided", "myself", "everyone", "something", "thing", "things", "time", "day", "night",
+    "who", "where", "which", "while", "than", "also", "only", "any", "each", "every", "here", "now", "though",
+}
+
+
+def _stem(w: str) -> str:
+    if w.endswith("ies") and len(w) > 4:
+        return w[:-3] + "y"
+    if w.endswith("ing") and len(w) > 5:
+        return w[:-3]
+    if w.endswith("ed") and len(w) > 4:
+        return w[:-2]
+    if w.endswith("s") and not w.endswith("ss") and len(w) > 3:
+        return w[:-1]
+    return w
+
+
+def _en_words(text: str) -> dict[str, str]:
+    """英文单词：词干 → 第一次出现的原词（展示线索用）。"""
+    out: dict[str, str] = {}
+    for w in re.findall(r"[a-z]+", text.lower()):
+        if len(w) >= 3 and w not in _EN_STOP:
+            out.setdefault(_stem(w), w)
+    return out
+
+
 def _grams(text: str) -> set[str]:
-    out = set()
+    """中文 2-gram + 英文词干，两种语言的日记都能匹配。"""
+    out = set(_en_words(text))
     for a, b in zip(text, text[1:]):
         if _is_cjk(a) and _is_cjk(b) and a not in _FUNCTION_CHARS and b not in _FUNCTION_CHARS:
             g = a + b
@@ -41,8 +75,10 @@ class Keywords:
 
     def overlap(self, other: "Keywords") -> tuple[int, list[str]]:
         """返回 (分数, 共同线索)。共同标签 3 分，共同 2-gram 1 分；相邻 2-gram 合并成完整词。"""
-        tag_hits = {t for t in self.tags if t in other.tags or t in other.text}
-        tag_hits |= {t for t in other.tags if t in self.text}
+        other_text, self_text = other.text.lower(), self.text.lower()
+        other_tags = {t.lower() for t in other.tags}
+        tag_hits = {t for t in self.tags if t.lower() in other_tags or t.lower() in other_text}
+        tag_hits |= {t for t in other.tags if t.lower() in self_text and t.lower() not in {h.lower() for h in tag_hits}}
         shared = self.grams & other.grams
         score = len(tag_hits) * 3 + len(shared)
 
@@ -61,15 +97,19 @@ class Keywords:
             i = j + 1
         kept_phrases = [p for p in phrases if not any(p in t for t in tag_hits)]
         kept_tags = [t for t in sorted(tag_hits) if not any(t in p for p in kept_phrases)]
-        return score, kept_tags + kept_phrases
+        # 英文：共同单词（已被标签覆盖的不重复列出）
+        words = _en_words(self.text)
+        tag_stems = {s for t in tag_hits for s in _en_words(t)}
+        en_clues = sorted(words[s] for s in shared if s in words and s not in tag_stems)
+        return score, kept_tags + kept_phrases + en_clues
 
 
 def _day_text(d: DayEntry) -> str:
-    return f"{d.title}。{d.content}"
+    return f"{d.title}. {d.content}"
 
 
 def _dream_text(d: DreamEntry) -> str:
-    return f"{d.title}。{d.content}"
+    return f"{d.title}. {d.content}"
 
 
 # ---------------------------------------------------------------- 候选

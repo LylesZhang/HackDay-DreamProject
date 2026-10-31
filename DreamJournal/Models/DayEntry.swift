@@ -29,11 +29,11 @@ enum Mood: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .happy: "开心"
-        case .calm: "平静"
-        case .neutral: "一般"
-        case .stressed: "焦虑"
-        case .sad: "低落"
+        case .happy: "Happy"
+        case .calm: "Calm"
+        case .neutral: "Okay"
+        case .stressed: "Stressed"
+        case .sad: "Low"
         }
     }
 }

@@ -36,6 +36,14 @@ struct RemoteAnalysisService: AnalysisService {
         return try Self.decoder.decode(AnalyzeResponse.self, from: data).analysis
     }
 
+    func suggestKeywords(recentDreams: [DreamEntry], existing: [Keyword]) async throws -> [KeywordSuggestion] {
+        let body = KeywordSuggestRequest(userId: AppSettings.userID,
+                                         dreams: recentDreams.map(DreamEntryDTO.init),
+                                         existingKeywords: existing.map(KeywordDTO.init))
+        let data = try await post("/api/v1/keywords/suggest", body: body)
+        return try Self.decoder.decode(KeywordSuggestResponse.self, from: data).suggestions
+    }
+
     private func post(_ path: String, body: some Encodable) async throws -> Data {
         let trimmed = baseURL.hasSuffix("/") ? String(baseURL.dropLast()) : baseURL
         guard let url = URL(string: trimmed + path) else { throw AnalysisError.invalidURL(baseURL) }

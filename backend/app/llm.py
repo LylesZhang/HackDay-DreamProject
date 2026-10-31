@@ -8,13 +8,13 @@ import numpy as np
 from . import config
 from .errors import AppError
 from .retrieval import Candidate, local_day
-from .schemas import DayEntry, DreamEntry
+from .schemas import DayEntry, DreamEntry, KeywordIn
 
 log = logging.getLogger(__name__)
 
 _client = None
 
-MOOD_LABEL = {"happy": "开心", "calm": "平静", "neutral": "一般", "stressed": "焦虑", "sad": "低落"}
+MOOD_LABEL = {"happy": "happy", "calm": "calm", "neutral": "okay", "stressed": "stressed", "sad": "low"}
 LANGUAGE_NAME = {"zh": "简体中文", "en": "English", "ja": "日本語"}
 
 
@@ -50,50 +50,56 @@ async def embed(texts: list[str]) -> list[np.ndarray]:
 # ---------------------------------------------------------------- prompt
 
 SYSTEM = (
-    "你是一位温和的梦境分析师，擅长把梦和做梦者最近的现实经历联系起来。"
-    "你的解读是启发式的自我觉察参考，不做任何医学或心理诊断，不使用病理化的词语，不下绝对结论。"
+    "You are a gentle dream analyst who connects dreams to the dreamer's recent waking life. "
+    "Your readings are for self-reflection only: never diagnose, never use pathologizing language, "
+    "and never state conclusions as certain."
 )
 
 
 def _when(days_before: int) -> str:
-    return {0: "梦的当天", 1: "梦前 1 天"}.get(days_before, f"梦前 {days_before} 天")
+    return {0: "same day as the dream", 1: "1 day before the dream"}.get(days_before, f"{days_before} days before the dream")
+
+
+def _list(items: list[str], empty: str = "none") -> str:
+    return ", ".join(items) or empty
 
 
 def build_prompt(dream: DreamEntry, days: list[Candidate], dreams: list[Candidate], language: str) -> str:
     lang = LANGUAGE_NAME.get(language, language)
     lines = [
-        f"【今晚的梦】日期={local_day(dream.dreamDate)} 标题={dream.title}",
-        f"内容：{dream.content}",
-        f"情绪：{'、'.join(dream.emotions) or '未记录'}；清晰度 {dream.vividness}/5；清醒梦：{'是' if dream.isLucid else '否'}；"
-        f"标签：{'、'.join(dream.tags) or '无'}",
+        f"[Tonight's dream] date={local_day(dream.dreamDate)} title={dream.title}",
+        f"Content: {dream.content}",
+        f"Emotions: {_list(dream.emotions, 'not recorded')}; lucid: {'yes' if dream.isLucid else 'no'}; "
+        f"tags: {_list(dream.tags)}",
         "",
-        "【候选白天日记】" + ("" if days else "（无）"),
+        "[Candidate day entries]" + ("" if days else " (none)"),
     ]
     for c in days:
         d: DayEntry = c.entry
         lines.append(
-            f"- id={d.id} 日期={local_day(d.date)}（{_when(c.days_before)}） 心情={MOOD_LABEL.get(d.mood, d.mood)} "
-            f"标题={d.title} 标签={'、'.join(d.tags) or '无'} 共同线索={'、'.join(c.clues[:4]) or '无'}\n  内容：{d.content}"
+            f"- id={d.id} date={local_day(d.date)} ({_when(c.days_before)}) mood={MOOD_LABEL.get(d.mood, d.mood)} "
+            f"title={d.title} tags={_list(d.tags)} shared clues={_list(c.clues[:4])}\n  Content: {d.content}"
         )
-    lines += ["", "【候选过往梦境】" + ("" if dreams else "（无）")]
+    lines += ["", "[Candidate past dreams]" + ("" if dreams else " (none)")]
     for c in dreams:
         o: DreamEntry = c.entry
         lines.append(
-            f"- id={o.id} 日期={local_day(o.dreamDate)}（{c.days_before} 天前的梦） 标题={o.title} "
-            f"情绪={'、'.join(o.emotions) or '无'} 共同线索={'、'.join(c.clues[:4]) or '无'}\n  内容：{o.content}"
+            f"- id={o.id} date={local_day(o.dreamDate)} ({c.days_before} days earlier) title={o.title} "
+            f"emotions={_list(o.emotions)} shared clues={_list(c.clues[:4])}\n  Content: {o.content}"
         )
     lines += [
         "",
-        "【要求】",
-        f"1. 全部输出使用{lang}。",
-        "2. summary：2–4 句话，必须明确点出这个梦和哪一篇白天经历（用标题和时间描述，例如“前一天的「第一轮面试」”）有关；"
-        "如果候选里确实没有相关的，就坦诚说明。",
-        "3. themes：1–3 个短主题，每个不超过 6 个字。",
-        "4. symbols：梦中 2–4 个关键意象及温和的解读，每条 1–2 句。",
-        "5. relatedDays / relatedDreams：只能从上面的候选里挑真正相关的（可以为空），entryId 必须原样使用候选的 id；"
-        "reason 用一句话写明时间关系和共同线索，例如“梦的当天 · 共同线索：工作、面试”。按相关程度从高到低排列。",
-        "6. emotionalTone：一两句话，把梦中情绪和白天心情对照起来。",
-        "7. suggestion：一条具体、温和、今天就能做的小建议。",
+        "[Instructions]",
+        f"1. Write everything in {lang}.",
+        "2. summary: 2–4 sentences. Say clearly which day entry this dream relates to, by title and timing "
+        "(e.g. \"“First-round interview” the day before\"). If no candidate is truly related, say so honestly.",
+        "3. themes: 1–3 short themes, at most 4 words each.",
+        "4. symbols: 2–4 key images from the dream, each with a gentle 1–2 sentence reading.",
+        "5. relatedDays / relatedDreams: pick only truly related items from the candidates above (may be empty), "
+        "and copy each candidate's id exactly as entryId. reason is one sentence giving the timing and shared clues, "
+        "e.g. \"Same day · Shared: work, interview\". Order from most to least related.",
+        "6. emotionalTone: one or two sentences comparing the dream's emotions with the daytime mood.",
+        "7. suggestion: one concrete, gentle thing the dreamer could do today.",
     ]
     return "\n".join(lines)
 
@@ -139,18 +145,87 @@ def response_schema(day_ids: list[str], dream_ids: list[str]) -> dict:
 # ---------------------------------------------------------------- 生成
 
 async def analyze(dream: DreamEntry, days: list[Candidate], dreams: list[Candidate], language: str) -> dict:
+    prompt = build_prompt(dream, days, dreams, language)
+    schema = response_schema([c.id for c in days], [c.id for c in dreams])
+    return await _generate_json(prompt, schema, temperature=0.7)
+
+
+# ---------------------------------------------------------------- 关键词提炼
+
+KIND_GUIDE = (
+    "person = a specific person or role (e.g. Grandma, my ex, the interviewer); "
+    "imagery = a symbol, object or action in the dream (e.g. whale, water, falling); "
+    "scene = a life stage or setting (e.g. high school, the old house, a strange city)"
+)
+
+
+def build_keyword_prompt(dreams: list[DreamEntry], existing: list[KeywordIn], language: str, max_n: int) -> str:
+    lang = LANGUAGE_NAME.get(language, language)
+    lines = ["[Recent dreams]"]
+    for d in dreams:
+        lines.append(
+            f"- {local_day(d.dreamDate)} “{d.title}”: {d.content}"
+            f" (emotions: {_list(d.emotions, 'not recorded')}; tags: {_list(d.tags)})"
+        )
+    lines += ["", "[The user's existing keywords]" + ("" if existing else " (none)")]
+    for k in existing:
+        alias = f", aliases: {', '.join(k.aliases)}" if k.aliases else ""
+        lines.append(f"- {k.name} ({k.kind}{alias})")
+    lines += [
+        "",
+        "[Instructions]",
+        f"1. Pick at most {max_n} keywords from these dreams that are worth tracking over time. Write everything in {lang}.",
+        f"2. kind must be one of: {KIND_GUIDE}.",
+        "3. name must be short (at most 3 words): a word the user would want to tap next time they log a dream. "
+        "Prefer things that recur across several dreams.",
+        "4. If a keyword means the same thing as an existing keyword, use the existing keyword's name instead of a new one.",
+        "5. reason: one sentence on which dreams it appears in, e.g. \"In “Flying with the whale” and “The flooded city”\".",
+        "6. Order from most to least worth tracking.",
+    ]
+    return "\n".join(lines)
+
+
+def keyword_schema() -> dict:
+    return {
+        "type": "object",
+        "properties": {
+            "suggestions": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string"},
+                        "kind": {"type": "string", "enum": ["person", "imagery", "scene"]},
+                        "reason": {"type": "string"},
+                    },
+                    "required": ["name", "kind", "reason"],
+                    "propertyOrdering": ["name", "kind", "reason"],
+                },
+            }
+        },
+        "required": ["suggestions"],
+    }
+
+
+async def suggest_keywords(dreams: list[DreamEntry], existing: list[KeywordIn], language: str, max_n: int) -> dict:
+    prompt = build_keyword_prompt(dreams, existing, language, max_n)
+    return await _generate_json(prompt, keyword_schema(), temperature=0.4)
+
+
+# ---------------------------------------------------------------- 通用：结构化 JSON 生成
+
+async def _generate_json(prompt: str, schema: dict, temperature: float) -> dict:
     if not enabled():
-        raise AppError("GEMINI_NOT_CONFIGURED", "后端还没有配置 Gemini API Key", 503)
+        raise AppError("GEMINI_NOT_CONFIGURED", "The backend has no Gemini API key configured", 503)
 
     from google.genai import errors as genai_errors
     from google.genai import types
 
-    prompt = build_prompt(dream, days, dreams, language)
     gen_config = types.GenerateContentConfig(
         system_instruction=SYSTEM,
-        temperature=0.7,
+        temperature=temperature,
         response_mime_type="application/json",
-        response_schema=response_schema([c.id for c in days], [c.id for c in dreams]),
+        response_schema=schema,
         # 模型默认会“思考”，关掉（或降到最低）能把延迟压到几秒内。
         # 2.x 用 thinking_budget；3.x 改用 thinking_level（3.8-flash 不支持 MINIMAL，最低是 LOW）
         thinking_config=(
@@ -165,19 +240,19 @@ async def analyze(dream: DreamEntry, days: list[Candidate], dreams: list[Candida
             timeout=config.GEMINI_TIMEOUT_S,
         )
     except asyncio.TimeoutError:
-        raise AppError("GEMINI_TIMEOUT", "模型响应超时，请稍后再试", 504)
+        raise AppError("GEMINI_TIMEOUT", "The model timed out. Please try again later.", 504)
     except genai_errors.APIError as e:
         log.warning("Gemini API error: %s", e)
         if e.code == 429:
-            raise AppError("GEMINI_RATE_LIMITED", "模型调用太频繁了，请稍后再试", 429)
-        raise AppError("GEMINI_ERROR", f"模型调用失败（{e.code}）", 502)
+            raise AppError("GEMINI_RATE_LIMITED", "Too many model requests. Please try again later.", 429)
+        raise AppError("GEMINI_ERROR", f"Model call failed ({e.code})", 502)
 
     text = resp.text or ""
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
         log.warning("Gemini returned non-JSON: %.300s", text)
-        raise AppError("GEMINI_BAD_OUTPUT", "模型返回的内容无法解析，请重试", 502)
+        raise AppError("GEMINI_BAD_OUTPUT", "Couldn't read the model's response. Please try again.", 502)
     if not isinstance(data, dict):
-        raise AppError("GEMINI_BAD_OUTPUT", "模型返回的内容无法解析，请重试", 502)
+        raise AppError("GEMINI_BAD_OUTPUT", "Couldn't read the model's response. Please try again.", 502)
     return data

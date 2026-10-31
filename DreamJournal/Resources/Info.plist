@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh-Hans</string>
 	<key>CFBundleDisplayName</key>
-	<string>昼夜日记</string>
+	<string>Day &amp; Night</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,9 +28,9 @@
 		<true/>
 	</dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>用于将你刚醒来时说出的梦境转写为记录。</string>
+	<string>Used to transcribe the dream you describe right after waking up.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>用于将你的梦境语音转写为文字。</string>
+	<string>Used to turn your spoken dream into text.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

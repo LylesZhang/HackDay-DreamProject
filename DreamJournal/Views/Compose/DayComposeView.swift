@@ -20,16 +20,16 @@ struct DayComposeView: View {
         NavigationStack {
             Form {
                 Section {
-                    DatePicker("日期", selection: $draft.date, displayedComponents: .date)
-                    TextField("一句话标题，比如：第一次面试", text: $draft.title)
+                    DatePicker("Date", selection: $draft.date, displayedComponents: .date)
+                    TextField("Title, e.g. First interview", text: $draft.title)
                 }
                 .listRowBackground(FormRowBackground.day)
-                Section("今天发生了什么") {
+                Section("What happened today") {
                     TextEditor(text: $draft.content)
                         .frame(minHeight: 140)
                 }
                 .listRowBackground(FormRowBackground.day)
-                Section("心情") {
+                Section("Mood") {
                     HStack {
                         ForEach(Mood.allCases) { mood in
                             Button {
@@ -53,20 +53,20 @@ struct DayComposeView: View {
                     }
                 }
                 .listRowBackground(FormRowBackground.day)
-                Section("标签（空格分隔）") {
-                    TextField("面试 朋友 下雨", text: $tagText)
+                Section("Tags (space-separated)") {
+                    TextField("interview friends rain", text: $tagText)
                 }
                 .listRowBackground(FormRowBackground.day)
             }
             .scrollContentBackground(.hidden)
             .background(DayPalette.backgroundGradient.ignoresSafeArea())
             .foregroundStyle(DayPalette.text)
-            .navigationTitle(isEditing ? "编辑日记" : "白天日记")
+            .navigationTitle(isEditing ? "Edit Entry" : "Day Entry")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("取消") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存", action: save)
+                    Button("Save", action: save)
                         .disabled(draft.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
@@ -79,7 +79,7 @@ struct DayComposeView: View {
     private func save() {
         draft.tags = TagParser.parse(tagText)
         if draft.title.trimmingCharacters(in: .whitespaces).isEmpty {
-            draft.title = String(draft.content.prefix(12))
+            draft.title = TagParser.autoTitle(from: draft.content)
         }
         store.upsert(draft)
         dismiss()
@@ -91,5 +91,15 @@ enum TagParser {
         text.components(separatedBy: CharacterSet(charactersIn: " ,，、#\n"))
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
+    }
+
+    /// 没写标题时从正文生成：取第一句，过长就在单词边界截断
+    static func autoTitle(from content: String, maxLength: Int = 32) -> String {
+        let text = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        let firstSentence = text.split(whereSeparator: { ".!?\n".contains($0) }).first.map(String.init) ?? text
+        guard firstSentence.count > maxLength else { return firstSentence }
+        let cut = firstSentence.prefix(maxLength)
+        if let space = cut.lastIndex(of: " ") { return String(cut[..<space]) + "…" }
+        return String(cut) + "…"
     }
 }

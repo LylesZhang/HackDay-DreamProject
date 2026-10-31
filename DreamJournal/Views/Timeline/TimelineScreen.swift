@@ -9,6 +9,7 @@ struct TimelineScreen: View {
     @State private var showQuickCapture = false
     @State private var showChooser = false
     @State private var showSettings = false
+    @State private var showKeywords = false
     @State private var addTaps = 0
 
     var body: some View {
@@ -29,13 +30,7 @@ struct TimelineScreen: View {
                 addButton
             }
             .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(for: Route.self) { route in
-                switch route {
-                case .day(let id): DayDetailView(entryID: id)
-                case .dream(let id): DreamDetailView(dreamID: id, path: $path)
-                case .report(let id): AnalysisReportView(dreamID: id, path: $path)
-                }
-            }
+            .routeDestinations(path: $path)
         }
         .tint(mode == .day ? DayPalette.accent : NightPalette.accent)
         .sheet(item: $compose) { target in
@@ -45,10 +40,15 @@ struct TimelineScreen: View {
             }
         }
         .sheet(isPresented: $showSettings) { SettingsView() }
+        .sheet(isPresented: $showKeywords) { KeywordLibraryView() }
+        // 最近几天的梦有变化时，在后台重新提炼关键词，下次速记直接弹出
+        .task(id: store.suggestionSignature) {
+            await store.refreshKeywordSuggestions(using: AnalysisServiceFactory.current())
+        }
         .sheet(isPresented: $showQuickCapture) { QuickDreamCaptureView() }
-        .confirmationDialog("记录什么？", isPresented: $showChooser, titleVisibility: .visible) {
-            Button("白天发生了什么") { compose = .day(.now) }
-            Button("昨晚的梦") { compose = .dream(Calendar.current.date(byAdding: .day, value: -1, to: .now)!) }
+        .confirmationDialog("What do you want to log?", isPresented: $showChooser, titleVisibility: .visible) {
+            Button("What happened today") { compose = .day(.now) }
+            Button("Last night's dream") { compose = .dream(Calendar.current.date(byAdding: .day, value: -1, to: .now)!) }
         }
         .onAppear(perform: handleDemoLaunch)
         .onOpenURL(perform: handleDeepLink)
@@ -82,11 +82,19 @@ struct TimelineScreen: View {
                         .font(.subheadline)
                         .foregroundStyle(titleColor.opacity(0.7))
                         .contentTransition(.opacity)
-                    Text("昼夜日记")
+                    Text("Day & Night")
                         .font(.largeTitle.weight(.bold))
                         .foregroundStyle(titleColor)
                 }
                 Spacer()
+                Button { showKeywords = true } label: {
+                    Image(systemName: "books.vertical.fill")
+                        .font(.title3)
+                        .foregroundStyle(titleColor.opacity(0.8))
+                        .frame(width: 44, height: 44)
+                        .background(.ultraThinMaterial, in: Circle())
+                }
+                .accessibilityLabel("Keyword library")
                 Button { showSettings = true } label: {
                     Image(systemName: "gearshape.fill")
                         .font(.title3)
@@ -94,7 +102,7 @@ struct TimelineScreen: View {
                         .frame(width: 44, height: 44)
                         .background(.ultraThinMaterial, in: Circle())
                 }
-                .accessibilityLabel("设置")
+                .accessibilityLabel("Settings")
             }
             ModeToggle(mode: $mode)
         }
@@ -103,9 +111,9 @@ struct TimelineScreen: View {
 
     private var greeting: String {
         switch mode {
-        case .day: "今天过得怎么样？"
-        case .night: "昨晚梦见了什么？"
-        case .dual: "白天与梦境，彼此映照"
+        case .day: "How was your day?"
+        case .night: "What did you dream last night?"
+        case .dual: "Your days and dreams, side by side"
         }
     }
 
@@ -121,7 +129,7 @@ struct TimelineScreen: View {
                         }
                 }
                 if store.dayEntries.isEmpty {
-                    emptyState("还没有白天日记", systemImage: "sun.haze", message: "点右下角 + 记下今天发生的事")
+                    emptyState("No day entries yet", systemImage: "sun.haze", message: "Tap + to write down what happened today.")
                 }
             }
             .buttonStyle(PressableCardStyle())
@@ -137,7 +145,7 @@ struct TimelineScreen: View {
                                 onAddDream: { compose = .dream(pair.date) })
                 }
                 if store.dayNightPairs.isEmpty {
-                    emptyState("白天与梦境都还空着", systemImage: "circle.lefthalf.filled", message: "点右下角 + 写下第一篇")
+                    emptyState("Nothing here yet", systemImage: "circle.lefthalf.filled", message: "Tap + to write your first entry.")
                 }
             }
             .transition(.opacity)
@@ -179,9 +187,9 @@ struct TimelineScreen: View {
 
     private var addLabel: String {
         switch mode {
-        case .day: "新建白天日记"
-        case .night: "新建梦境日记"
-        case .dual: "新建日记"
+        case .day: "New day entry"
+        case .night: "New dream"
+        case .dual: "New entry"
         }
     }
 
@@ -194,6 +202,11 @@ struct TimelineScreen: View {
     }
 
     private func handleDemoLaunch() {
+        switch DemoLaunch.openSheet {
+        case "keywords": showKeywords = true
+        case "capture": showQuickCapture = true
+        default: break
+        }
         guard path.isEmpty, let index = DemoLaunch.openDreamIndex else { return }
         let dreams = store.sortedDreams
         guard dreams.indices.contains(index) else { return }
