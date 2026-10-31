@@ -23,7 +23,7 @@ struct DreamCardView: View {
                     .foregroundStyle(NightPalette.accent)
                 Spacer(minLength: 4)
                 if entry.analysis != nil {
-                    Text(compact ? "✨" : "✨ 已分析")
+                    Label { if !compact { Text("已分析") } } icon: { Image(systemName: "sparkles") }
                         .font(.caption2.weight(.semibold))
                         .padding(.horizontal, compact ? 0 : 8)
                         .padding(.vertical, 3)

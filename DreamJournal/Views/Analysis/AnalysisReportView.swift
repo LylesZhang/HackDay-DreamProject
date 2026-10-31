@@ -74,7 +74,7 @@ struct AnalysisReportView: View {
 
     private func header(_ dream: DreamEntry, _ report: DreamAnalysis) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("✨ \(dream.title)")
+            Label(dream.title, systemImage: "sparkles")
                 .font(.title2.weight(.bold))
             Text(dream.dreamDate.dayTitle + " 的梦")
                 .font(.subheadline)

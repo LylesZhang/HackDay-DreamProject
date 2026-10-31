@@ -12,7 +12,7 @@ struct DayCardView: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(DayPalette.accent)
                 Spacer(minLength: 4)
-                Text(entry.mood.emoji).font(compact ? .body : .title3)
+                MoodIcon(mood: entry.mood, size: compact ? 24 : 30)
             }
             Text(entry.title)
                 .font(compact ? .subheadline.weight(.bold) : .headline)

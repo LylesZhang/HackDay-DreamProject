@@ -4,6 +4,7 @@ options:
   deploymentTarget:
     iOS: "17.0"
   createIntermediateGroups: true
+  developmentLanguage: zh-Hans
 settings:
   base:
     SWIFT_VERSION: "5.0"
@@ -28,6 +29,7 @@ targets:
       path: DreamJournal/Resources/Info.plist
       properties:
         CFBundleDisplayName: 昼夜日记
+        CFBundleDevelopmentRegion: zh-Hans
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false

@@ -26,14 +26,17 @@ struct DreamComposeView: View {
                         DatePicker("做梦的那一晚", selection: $draft.dreamDate, displayedComponents: .date)
                         TextField("给这个梦起个名字", text: $draft.title)
                     }
+                    .listRowBackground(FormRowBackground.night)
                     Section("梦里发生了什么") {
                         TextEditor(text: $draft.content)
                             .frame(minHeight: 160)
                             .scrollContentBackground(.hidden)
                     }
+                    .listRowBackground(FormRowBackground.night)
                     Section("梦里的情绪") {
                         FlowChips(options: DreamEntry.emotionOptions, selection: $draft.emotions)
                     }
+                    .listRowBackground(FormRowBackground.night)
                     Section {
                         HStack {
                             Text("清晰度")
@@ -46,13 +49,15 @@ struct DreamComposeView: View {
                         }
                         Toggle("这是一个清醒梦", isOn: $draft.isLucid)
                     }
+                    .listRowBackground(FormRowBackground.night)
                     Section("标签（空格分隔）") {
                         TextField("水 飞 迷路", text: $tagText)
                     }
+                    .listRowBackground(FormRowBackground.night)
                 }
                 .scrollContentBackground(.hidden)
             }
-            .navigationTitle(isEditing ? "编辑梦境" : "🌙 梦境日记")
+            .navigationTitle(isEditing ? "编辑梦境" : "梦境日记")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("取消") { dismiss() } }

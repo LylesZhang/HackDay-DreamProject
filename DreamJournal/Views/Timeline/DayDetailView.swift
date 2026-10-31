@@ -18,9 +18,12 @@ struct DayDetailView: View {
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(DayPalette.accent)
                             Spacer()
-                            Text("\(entry.mood.emoji) \(entry.mood.label)")
-                                .font(.subheadline)
-                                .foregroundStyle(DayPalette.secondaryText)
+                            HStack(spacing: 6) {
+                                MoodIcon(mood: entry.mood, size: 26)
+                                Text(entry.mood.label)
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(DayPalette.secondaryText)
                         }
                         Text(entry.title)
                             .font(.title.weight(.bold))

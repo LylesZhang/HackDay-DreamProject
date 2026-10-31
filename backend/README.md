@@ -35,5 +35,5 @@ curl -X POST localhost:8000/api/v1/dreams/analyze  -H 'Content-Type: application
 2. （有 Key 且 `USE_EMBEDDING=true` 时）计算梦和每篇日记的 embedding 余弦相似度；sync 时会在后台预先算好并缓存
 3. 白天候选：梦前 0–`lookbackDays` 天，分数 = 时间分（当天 3 / 前一天 2 / 2–3 天 1）+ 关键词分 + 语义分，取前 `maxRelated` 条
    过往梦境候选：只取更早的梦，按关键词和语义分取前 3（完全无关的不给模型）
-4. Gemini（`gemini-2.5-flash`，关闭 thinking 以降低延迟）按 JSON Schema 输出，只能从候选里挑选
+4. Gemini（默认 `gemini-3.5-flash-lite`，通常 2–3 秒返回；thinking 调到最低以降低延迟）按 JSON Schema 输出，只能从候选里挑选
 5. 后处理后返回；embedding 失败时自动退回纯关键词检索，不影响结果返回

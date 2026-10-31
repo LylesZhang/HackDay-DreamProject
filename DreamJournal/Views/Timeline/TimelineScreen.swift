@@ -46,8 +46,8 @@ struct TimelineScreen: View {
         .sheet(isPresented: $showSettings) { SettingsView() }
         .sheet(isPresented: $showQuickCapture) { QuickDreamCaptureView() }
         .confirmationDialog("记录什么？", isPresented: $showChooser, titleVisibility: .visible) {
-            Button("☀️ 白天发生了什么") { compose = .day(.now) }
-            Button("🌙 昨晚的梦") { compose = .dream(Calendar.current.date(byAdding: .day, value: -1, to: .now)!) }
+            Button("白天发生了什么") { compose = .day(.now) }
+            Button("昨晚的梦") { compose = .dream(Calendar.current.date(byAdding: .day, value: -1, to: .now)!) }
         }
         .onAppear(perform: handleDemoLaunch)
         .onOpenURL(perform: handleDeepLink)

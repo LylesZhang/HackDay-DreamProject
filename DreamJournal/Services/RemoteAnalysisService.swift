@@ -39,7 +39,7 @@ struct RemoteAnalysisService: AnalysisService {
     private func post(_ path: String, body: some Encodable) async throws -> Data {
         let trimmed = baseURL.hasSuffix("/") ? String(baseURL.dropLast()) : baseURL
         guard let url = URL(string: trimmed + path) else { throw AnalysisError.invalidURL(baseURL) }
-        var request = URLRequest(url: url, timeoutInterval: 30)
+        var request = URLRequest(url: url, timeoutInterval: 100)   // 后端给模型留了 90 秒
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try Self.encoder.encode(body)
